@@ -233,6 +233,24 @@ $(document).ready(function () {
     });
   });
 
+    //Mensaje de alerta al no formalizar
+    $(".noforma").submit(function (e) {
+      e.preventDefault();
+      Swal.fire({
+        title: "¿Está seguro de No Formalizar el Instrumento?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#28a745",
+        cancelButtonColor: "#dc3545",
+        confirmButtonText: "Si",
+        cancelButtonText: "No",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.submit();
+        }
+      });
+    });
+
   //Mensaje de alerta al validar
   $(".validar").submit(function (e) {
     e.preventDefault();
@@ -364,49 +382,63 @@ function barrasrankig() {
         ventas.push(data[i]["colima"]);
         compras.push(data[i]["nacional"]);
       }
-      // Set new default font family and font color to mimic Bootstrap's default styling
-      Chart.defaults.global.defaultFontFamily =
-        'Montserrat,-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
-      Chart.defaults.global.defaultFontColor = "#292b2c";
 
-      const Ventas = {
-        label: "Colima",
-        data: ventas,
-        backgroundColor: "rgba(255, 20, 20, 0.2)", // Color de fondo
-        borderColor: "rgba(0, 0, 0, 0.2)", // Color del borde
-        borderWidth: 1, // Ancho del borde
-      };
+      // Ahora realizamos la segunda solicitud AJAX dentro del bloque success de la primera
+      $.ajax({
+        url: base + "Inicio/pastelcolores",
+        type: "POST",
+        success: function (response) {
+          var datac = JSON.parse(response);
+          var colores = [];
+          for (var i = 0; i < datac.length; i++) {
+            colores.push(datac[i]["codigo"]);
+          }
 
-      const Compras = {
-        label: "Nacional",
-        data: compras,
-        backgroundColor: "rgba(20, 255, 20, 0.2)", // Color de fondo
-        borderColor: "rgba(0, 0, 0, 0.2)", // Color del borde
-        borderWidth: 1, // Ancho del borde
-      };
+          // Set new default font family and font color to mimic Bootstrap's default styling
+          Chart.defaults.global.defaultFontFamily =
+            'Montserrat,-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+          Chart.defaults.global.defaultFontColor = "#292b2c";
 
-      // Bar Chart Example
-      var ctx = document.getElementById("barrasrankig");
-      var myLineChart = new Chart(ctx, {
-        type: "bar",
-        data: {
-          labels: nombre,
-          datasets: [Ventas, Compras],
-        },
-        options: {
-          scales: {
-            xAxes: [],
-            yAxes: [
-              {
-                ticks: {
-                  beginAtZero: true,
-                },
+          const Ventas = {
+            label: "Colima",
+            data: ventas,
+            backgroundColor: colores[0]+'80', // Color de fondo
+            borderColor: "rgba(0, 0, 0, 0.2)", // Color del borde
+            borderWidth: 1, // Ancho del borde
+          };
+
+          const Compras = {
+            label: "Nacional",
+            data: compras,
+            backgroundColor: colores[1] + "80", // Color de fondo
+            borderColor: "rgba(0, 0, 0, 0.2)", // Color del borde
+            borderWidth: 1, // Ancho del borde
+          };
+
+          // Bar Chart Example
+          var ctx = document.getElementById("barrasrankig");
+          var myLineChart = new Chart(ctx, {
+            type: "bar",
+            data: {
+              labels: nombre,
+              datasets: [Ventas, Compras],
+            },
+            options: {
+              scales: {
+                xAxes: [],
+                yAxes: [
+                  {
+                    ticks: {
+                      beginAtZero: true,
+                    },
+                  },
+                ],
               },
-            ],
-          },
+            },
+          });
         },
       });
-    },
+    },    
   });
 }
 
@@ -417,93 +449,137 @@ function BarrasAtencion() {
     type: "POST",
     success: function (response) {
       var data = JSON.parse(response);
-      var nombre = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
+      var fechas = [];
+
+      // Calcular los últimos 5 días hábiles (excluyendo sábados y domingos)
+      var today = new Date();
+      today.setDate(today.getDate() - 1); // Retroceder un día
+      var daysCount = 0;
+      while (daysCount < 5) {
+        if (today.getDay() !== 0 && today.getDay() !== 6) { // Excluir sábado (6) y domingo (0)
+          fechas.push(formatDate(today)); // Agregar la fecha formateada a fechas
+          daysCount++;
+        }
+        today.setDate(today.getDate() - 1); // Retroceder un día
+      }
+      
+      fechas.reverse(); // Invertir el orden para mostrar las fechas más recientes primero
+
       var nacional = [];
       var colima = [];
       for (var i = 0; i < data.length; i++) {
-        nacional.push(data[i]["mnacional"]);
-        colima.push(data[i]["colima"]);
+        nacional.push(parseFloat(data[i]["mnacional"]).toFixed(2));
+        colima.push(parseFloat(data[i]["colima"]).toFixed(2));
       }
-      // Set new default font family and font color to mimic Bootstrap's default styling
-      Chart.defaults.global.defaultFontFamily =
-        'Montserrat,-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
-      Chart.defaults.global.defaultFontColor = "#292b2c";
 
-      const Colima = {
-        label: "Colima",
-        data: colima,
-        backgroundColor: "rgba(92, 179, 119, 0.2)", // Color de fondo
-        borderColor: "rgba(92, 179, 119, 0.8)", // Color del borde
-        borderWidth: 1, // Ancho del borde
-      };
+      // Ahora realizamos la segunda solicitud AJAX dentro del bloque success de la primera
+      $.ajax({
+        url: base + "Inicio/pastelcolores",
+        type: "POST",
+        success: function (response) {
+          var datac = JSON.parse(response);
+          var colores = [];
+          for (var i = 0; i < datac.length; i++) {
+            colores.push(datac[i]["codigo"]);
+          }
 
-      const Nacional = {
-        label: "Nacional",
-        data: nacional,
-        borderDash: [3, 5],
-        backgroundColor: "rgba(0, 168, 198, 0.0)", // Color de fondo
-        borderColor: "rgba(0, 168, 198, 1)", // Color del borde
-        borderWidth: 1, // Ancho del borde
-      };
 
-      // Bar Chart Example
-      var ctx = document.getElementById("BarrasAtencion");
-      var myLineChart = new Chart(ctx, {
-        type: "line",
-        data: {
-          labels: nombre,
-          datasets: [Nacional, Colima],
-        },
-        options: {
-          tooltips: {
-            mode: "index",
-            intersect: false,
-            titleMarginBottom: 10,
-            bodySpacing: 10,
-            xPadding: 16,
-            yPadding: 16,
-            borderColor: window.chartColors.border,
-            borderWidth: 1,
-            backgroundColor: "#fff",
-            bodyFontColor: window.chartColors.text,
-            titleFontColor: window.chartColors.text,
+          // Set new default font family and font color to mimic Bootstrap's default styling
+          Chart.defaults.global.defaultFontFamily =
+            'Montserrat,-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+          Chart.defaults.global.defaultFontColor = "#292b2c";
 
-            callbacks: {
-              //Ref: https://stackoverflow.com/questions/38800226/chart-js-add-commas-to-tooltip-and-y-axis
-              label: function (tooltipItem, data) {
-                if (parseInt(tooltipItem.value) >= 1000) {
-                  return (
-                    "%" +
-                    tooltipItem.value
-                      .toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, ",") +
-                    "%"
-                  );
-                } else {
-                  return tooltipItem.value + "%";
-                }
-              },
+          const Colima = {
+            label: "Colima",
+            data: colima,
+            backgroundColor: colores[0]+'33', // Color de fondo
+            borderColor: colores[0]+'CC', // Color del borde
+            borderWidth: 1, // Ancho del borde
+          };
+        
+          const Nacional = {
+            label: "Nacional",
+            data: nacional,
+            borderDash: [3, 5],
+            backgroundColor: "rgba(0, 168, 198, 0.0)", // Color de fondo
+            borderColor: "rgba(255, 0, 0, 1)", // Color del borde
+            borderWidth: 1, // Ancho del borde
+          };
+        
+          // Bar Chart Example
+          var ctx = document.getElementById("BarrasAtencion");
+          var myLineChart = new Chart(ctx, {
+            type: "line",
+            data: {
+              labels: fechas,
+              datasets: [Nacional, Colima],
             },
-          },
-          hover: {
-            mode: "nearest",
-            intersect: true,
-          },
-          scales: {
-            xAxes: [],
-            yAxes: [
-              {
-                ticks: {
-                  beginAtZero: true,
+            options: {
+              tooltips: {
+                mode: "index",
+                intersect: false,
+                titleMarginBottom: 10,
+                bodySpacing: 10,
+                xPadding: 16,
+                yPadding: 16,
+                borderColor: window.chartColors.border,
+                borderWidth: 1,
+                backgroundColor: "#fff",
+                bodyFontColor: window.chartColors.text,
+                titleFontColor: window.chartColors.text,
+              
+                callbacks: {
+                  //Ref: https://stackoverflow.com/questions/38800226/chart-js-add-commas-to-tooltip-and-y-axis
+                  label: function (tooltipItem, data) {
+                    if (parseInt(tooltipItem.value) >= 1000) {
+                      return (
+                        "%" +
+                        tooltipItem.value
+                          .toString()
+                          .replace(/\B(?=(\d{3})+(?!\d))/g, ",") +
+                        "%"
+                      );
+                    } else {
+                      return tooltipItem.value + "%";
+                    }
+                  },
                 },
               },
-            ],
-          },
+              hover: {
+                mode: "nearest",
+                intersect: true,
+              },
+              scales: {
+                xAxes: [],
+                yAxes: [
+                  {
+                    ticks: {
+                      beginAtZero: false,
+                      max: 100,
+                    },
+                  },
+                ],
+              },
+            },
+          });
         },
       });
     },
   });
 }
+
+// Función para formatear la fecha como "dd/mm/yyyy"
+function formatDate(date) {
+  var dd = String(date.getDate()).padStart(2, "0");
+  var mm = String(date.getMonth() + 1).padStart(2, "0");
+  var yyyy = date.getFullYear();
+  return dd + "/" + mm + "/" + yyyy;
+}
+
+
+
+
+
 
 function pastelnegadas() {
   $.ajax({
@@ -517,46 +593,49 @@ function pastelnegadas() {
         nombre.push(data[i]["abreviacion"]);
         total.push(data[i]["negadas"]);
       }
-      // Set new default font family and font color to mimic Bootstrap's default styling
-      Chart.defaults.global.defaultFontFamily =
-        'Montserrat,-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
-      Chart.defaults.global.defaultFontColor = "#292b2c";
-      // Pie Chart Example
-      var ctx = document.getElementById("pastelnegadas");
-      var myPieChart = new Chart(ctx, {
-        type: "pie",
-        data: {
-          labels: nombre,
-          datasets: [
-            {
-              data: total,
-              backgroundColor: [
-                "#b0c2f2",
-                "#b0f2c2",
-                "#fcb7af",
-                "#d8f8e1",
-                "#ffe4e1",
-                "#fdf9c4",
-                "#ffda9e",
-                "#c5c6c8",
-                "#b2e2f2",
-                "#fabfb7",
+
+      // Ahora realizamos la segunda solicitud AJAX dentro del bloque success de la primera
+      $.ajax({
+        url: base + "Inicio/pastelcolores",
+        type: "POST",
+        success: function (response) {
+          var datac = JSON.parse(response);
+          var colores = [];
+          for (var i = 0; i < datac.length; i++) {
+            colores.push(datac[i]["codigo"]);
+          }
+
+          // Resto del código para generar el gráfico de pastel
+          Chart.defaults.global.defaultFontFamily =
+            'Montserrat,-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+          Chart.defaults.global.defaultFontColor = "#292b2c";
+          var ctx = document.getElementById("pastelnegadas");
+          var myPieChart = new Chart(ctx, {
+            type: "pie",
+            data: {
+              labels: nombre,
+              datasets: [
+                {
+                  data: total,
+                  backgroundColor: colores, // Usamos los colores obtenidos
+                },
               ],
             },
-          ],
-        },
-        options: {
-          responsive: true,
-          legend: {
-            display: true,
-            position: "right",
-            align: "center",
-          },
+            options: {
+              responsive: true,
+              legend: {
+                display: true,
+                position: "right",
+                align: "center",
+              },
+            },
+          });
         },
       });
     },
   });
 }
+
 
 function chart_pie() {
   $.ajax({
@@ -568,30 +647,44 @@ function chart_pie() {
       var devengo = [];
       devengo.push(data[0]["devengo"]);
       devengo.push(data[0]["total"]);
-      // Set new default font family and font color to mimic Bootstrap's default styling
-      Chart.defaults.global.defaultFontFamily =
-        'Montserrat,-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
-      Chart.defaults.global.defaultFontColor = "#292b2c";
-      // Pie Chart Example
-      var ctx = document.getElementById("chart_pie");
-      var myPieChart = new Chart(ctx, {
-        type: "pie",
-        data: {
-          labels: nombre,
-          datasets: [
-            {
-              data: devengo,
-              backgroundColor: ["#1E8449", "#2980B9" ],
+      
+      // Ahora realizamos la segunda solicitud AJAX dentro del bloque success de la primera
+      $.ajax({
+        url: base + "Inicio/pastelcolores",
+        type: "POST",
+        success: function (response) {
+          var datac = JSON.parse(response);
+          var colores = [];
+          for (var i = 0; i < datac.length; i++) {
+            colores.push(datac[i]["codigo"]);
+          }
+
+          // Set new default font family and font color to mimic Bootstrap's default styling
+          Chart.defaults.global.defaultFontFamily =
+            'Montserrat,-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+          Chart.defaults.global.defaultFontColor = "#292b2c";
+          // Pie Chart Example
+          var ctx = document.getElementById("chart_pie");
+          var myPieChart = new Chart(ctx, {
+            type: "pie",
+            data: {
+              labels: nombre,
+              datasets: [
+                {
+                  data: devengo,
+                  backgroundColor: colores,
+                },
+              ],
             },
-          ],
-        },
-        options: {
-          responsive: true,
-          legend: {
-            display: true,
-            position: "right",
-            align: "center",
-          },
+            options: {
+              responsive: true,
+              legend: {
+                display: true,
+                position: "right",
+                align: "center",
+              },
+            },
+          });
         },
       });
     },
@@ -608,30 +701,44 @@ function chart_pie2() {
       var global = [];
       global.push(data[0]["devengo"]);
       global.push(data[0]["total"]);
-      // Set new default font family and font color to mimic Bootstrap's default styling
-      Chart.defaults.global.defaultFontFamily =
-        'Montserrat,-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
-      Chart.defaults.global.defaultFontColor = "#292b2c";
-      // Pie Chart Example
-      var ctx = document.getElementById("chart_pie2");
-      var myPieChart = new Chart(ctx, {
-        type: "pie",
-        data: {
-          labels: nombre,
-          datasets: [
-            {
-              data: global,
-              backgroundColor: ["#1E8449", "#6C3483"],
+
+      // Ahora realizamos la segunda solicitud AJAX dentro del bloque success de la primera
+      $.ajax({
+        url: base + "Inicio/pastelcolores",
+        type: "POST",
+        success: function (response) {
+          var datac = JSON.parse(response);
+          var colores = [];
+          for (var i = 0; i < datac.length; i++) {
+            colores.push(datac[i]["codigo"]);
+          }
+
+          // Set new default font family and font color to mimic Bootstrap's default styling
+          Chart.defaults.global.defaultFontFamily =
+            'Montserrat,-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+          Chart.defaults.global.defaultFontColor = "#292b2c";
+          // Pie Chart Example
+          var ctx = document.getElementById("chart_pie2");
+          var myPieChart = new Chart(ctx, {
+            type: "pie",
+            data: {
+              labels: nombre,
+              datasets: [
+                {
+                  data: global,
+                  backgroundColor: colores,
+                },
+              ],
             },
-          ],
-        },
-        options: {
-          responsive: true,
-          legend: {
-            display: true,
-            position: "right",
-            align: "center",
-          },
+            options: {
+              responsive: true,
+              legend: {
+                display: true,
+                position: "right",
+                align: "center",
+              },
+            },
+          });
         },
       });
     },
@@ -650,45 +757,48 @@ function GeneralContratos() {
         nombre.push(data[i]["nombre"]);
         total.push(data[i]["total"]);
       }
-      // Set new default font family and font color to mimic Bootstrap's default styling
-      Chart.defaults.global.defaultFontFamily =
-        'Montserrat,-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
-      Chart.defaults.global.defaultFontColor = "#292b2c";
-      // Pie Chart Example
-      var ctx = document.getElementById("GeneralContratos");
-      var myPieChart = new Chart(ctx, {
-        type: "pie",
-        data: {
-          labels: nombre,
-          position: "right",
-          datasets: [
-            {
-              data: total,
-              backgroundColor: [
-                "#b0c2f2",
-                "#b0f2c2",
-                "#fcb7af",
-                "#d8f8e1",
-                "#ffe4e1",
-                "#fdf9c4",
-                "#ffda9e",
-                "#c5c6c8",
-                "#b2e2f2",
-                "#fabfb7",
+
+      // Ahora realizamos la segunda solicitud AJAX dentro del bloque success de la primera
+      $.ajax({
+        url: base + "Inicio/pastelcolores",
+        type: "POST",
+        success: function (response) {
+          var datac = JSON.parse(response);
+          var colores = [];
+          for (var i = 0; i < datac.length; i++) {
+            colores.push(datac[i]["codigo"]);
+          }
+
+          // Set new default font family and font color to mimic Bootstrap's default styling
+          Chart.defaults.global.defaultFontFamily =
+            'Montserrat,-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+          Chart.defaults.global.defaultFontColor = "#292b2c";
+          // Pie Chart Example
+          var ctx = document.getElementById("GeneralContratos");
+          var myPieChart = new Chart(ctx, {
+            type: "pie",
+            data: {
+              labels: nombre,
+              position: "right",
+              datasets: [
+                {
+                  data: total,
+                  backgroundColor: colores,
+                },
               ],
             },
-          ],
-        },
-        options: {
-          responsive: true,
-          legend: {
-            display: true,
-            position: "right",
-            align: "center",
-          },
+            options: {
+              responsive: true,
+              legend: {
+                display: true,
+                position: "right",
+                align: "center",
+              },
+            },
+          });
         },
       });
-    },
+    },    
   });
 }
 
@@ -704,42 +814,45 @@ function GeneralContrataciones() {
         nombre.push(data[i]["nombre"]);
         total.push(data[i]["total"]);
       }
-      // Set new default font family and font color to mimic Bootstrap's default styling
-      Chart.defaults.global.defaultFontFamily =
-        'Montserrat,-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
-      Chart.defaults.global.defaultFontColor = "#292b2c";
-      // Pie Chart Example
-      var ctx = document.getElementById("GeneralContrataciones");
-      var myPieChart = new Chart(ctx, {
-        type: "pie",
-        data: {
-          labels: nombre,
-          position: "right",
-          datasets: [
-            {
-              data: total,
-              backgroundColor: [
-                "#b0c2f2",
-                "#b0f2c2",
-                "#fcb7af",
-                "#d8f8e1",
-                "#ffe4e1",
-                "#fdf9c4",
-                "#ffda9e",
-                "#c5c6c8",
-                "#b2e2f2",
-                "#fabfb7",
+
+      // Ahora realizamos la segunda solicitud AJAX dentro del bloque success de la primera
+      $.ajax({
+        url: base + "Inicio/pastelcolores",
+        type: "POST",
+        success: function (response) {
+          var datac = JSON.parse(response);
+          var colores = [];
+          for (var i = 0; i < datac.length; i++) {
+            colores.push(datac[i]["codigo"]);
+          }
+
+          // Set new default font family and font color to mimic Bootstrap's default styling
+          Chart.defaults.global.defaultFontFamily =
+            'Montserrat,-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+          Chart.defaults.global.defaultFontColor = "#292b2c";
+          // Pie Chart Example
+          var ctx = document.getElementById("GeneralContrataciones");
+          var myPieChart = new Chart(ctx, {
+            type: "pie",
+            data: {
+              labels: nombre,
+              position: "right",
+              datasets: [
+                {
+                  data: total,
+                  backgroundColor: colores,
+                },
               ],
             },
-          ],
-        },
-        options: {
-          responsive: true,
-          legend: {
-            display: true,
-            position: "right",
-            align: "center",
-          },
+            options: {
+              responsive: true,
+              legend: {
+                display: true,
+                position: "right",
+                align: "center",
+              },
+            },
+          });
         },
       });
     },

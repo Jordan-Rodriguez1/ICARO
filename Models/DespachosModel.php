@@ -51,7 +51,18 @@ class DespachosModel extends Mysql{ //El archivo se debe llamar igual que el con
         $return = $resul;
         return $return;
     }
+
+    public function eliminar(string $id)
+    {
+        $return = "";
+        $this->id = $id;
+        $query = "DELETE FROM despachos WHERE id = '{$this->id}'";
+        $resul = $this->delete($query); //DELETE es para ELIMINAR un registro
+        $return = $resul;
+        return $return;
+    }
 }
+
 
 
 ?>

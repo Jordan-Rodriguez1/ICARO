@@ -37,6 +37,13 @@ class IndicadoresModel extends Mysql{ //El archivo se debe llamar igual que el c
         return $res;
     }
 
+    public function colores()
+    {
+        $sql = "SELECT * FROM colores";
+        $res = $this->select_all($sql); 
+        return $res;
+    }
+
     //Selecciona la suma de negadas y manuales de los ultimos dos días
     public function rankingdiario()
     {

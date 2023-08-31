@@ -13,6 +13,23 @@ class PedidosModel extends Mysql{ //El archivo se debe llamar igual que el contr
         $res = $this->select_all($sql); //select_all es para seleccionar cuando el resultado puede arrojar muchas filas
         return $res;
     }
+
+    //Se pueden hacer 5 tipo de consultas
+    public function totalPedidos()
+    {
+        $sql = "SELECT COUNT(DISTINCT nopedido) AS total_pedidos_diferentes FROM pedidos;";
+        $res = $this->select($sql); //select_all es para seleccionar cuando el resultado puede arrojar muchas filas
+        return $res;
+    }
+
+    //Se pueden hacer 5 tipo de consultas
+    public function totalEntregado()
+    {
+        $sql = "SELECT SUM(Monto) AS suma_montos FROM pedidos WHERE noalta IS NOT NULL AND NoAlta <> '';";
+        $res = $this->select($sql); //select_all es para seleccionar cuando el resultado puede arrojar muchas filas
+        return $res;
+    }
+
     public function eliminarchivo(string $fecha)
     {
         $return = "";        
@@ -165,10 +182,27 @@ class PedidosModel extends Mysql{ //El archivo se debe llamar igual que el contr
         $this->monto = $monto;
         $this->pagado = $pagado; 
         $this->fecha = $fecha;
-        // Insertar los datos en la base de datos
-        $query = "INSERT INTO pedidos(nopedido, tipo, clave, noalta, proveedor, fecha_inicio, cantidad, topn, eta, fecha_alta, monto, pagado , fecha) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        $data = array($this->nopedido, $this->tipo, $this->clave, $this->noalta, $this->proveedor, $this->fecha_inicio, $this->cantidad, $this->topn, $this->eta,$this->fecha_alta, $this->monto, $this->pagado , $this->fecha);
-        $resul = $this->insert($query, $data); //insert es para agregar un registro
+
+
+        // Verifica si el contrato ya existe en la base de datos
+        $sql = "SELECT * FROM pedidos WHERE nopedido = '{$this->nopedido}' AND tipo = '{$this->tipo}' AND clave = '{$this->clave}' AND noalta = '{$this->noalta}'";
+        $result = $this->select($sql);
+
+        if (empty($result)) {
+            // Insertar los datos en la base de datos
+            $query = "INSERT INTO pedidos(nopedido, tipo, clave, noalta, proveedor, fecha_inicio, cantidad, topn, eta, fecha_alta, monto, pagado , fecha) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $data = array($this->nopedido, $this->tipo, $this->clave, $this->noalta, $this->proveedor, $this->fecha_inicio, $this->cantidad, $this->topn, $this->eta,$this->fecha_alta, $this->monto, $this->pagado , $this->fecha);
+            $resul = $this->insert($query, $data); //insert es para agregar un registro
+        } else {
+            $this->id = $result['id'];
+            $query = "UPDATE pedidos SET cantidad=?, topn=?, eta=?, fecha_alta=?, monto=?, pagado=? , fecha=? WHERE id=?";
+            $data = array($this->cantidad, $this->topn, $this->eta,$this->fecha_alta, $this->monto, $this->pagado , $this->fecha, $this->id);
+            $resul = $this->update($query, $data);
+            $return = $resul;
+        }
+        return $return;
+
+
     }
 
     

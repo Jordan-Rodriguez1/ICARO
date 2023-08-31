@@ -73,6 +73,10 @@
                       </select>
                   </div>
                   <div class="mb-3">
+                   <label for="inicio" class="form-label" style="color:#000000;">Inicio</label>
+                   <input type="date" class="form-control" id="inicio" name="inicio" value="" required>
+                  </div>
+                  <div class="mb-3">
                    <label for="date" class="form-label" style="color:#000000;">Término</label>
                    <input type="date" min="<?php echo date('Y-m-d'); ?>" class="form-control" id="termino" name="termino" value="" required>
                   </div>
@@ -81,7 +85,11 @@
                       <input type="number" min="0" class="form-control" id="maximo" name="maximo" value="" required>
                   </div>
                   <div class="mb-3">
-                      <label for="setting-input-3" class="form-label" style="color:#000000;">No. Fianza</label>
+                      <label for="numero" class="form-label" style="color:#000000;">No. Fianza<span class="ml-2" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Si el contrato no tiene fianza llenar poniendo 'SIN FIANZA'."><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-info-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                      <path fill-rule="evenodd" style="color:#FF0000;" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                      <path style="color:#FF0000;" d="M8.93 6.588l-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588z"/>
+                      <circle cx="8" cy="4.5" r="1"/>
+                      </svg></span></label>
                       <input type="text" class="form-control" id="fianza" name="fianza" value="" required>
                   </div>
                   <div class="mb-3">
@@ -91,7 +99,19 @@
                         <option> <?php echo $plataforma['plataforma'] ?></option>
                        <?php } ?>
                     </select>
-                  </div>              
+                  </div>       
+                  <div class="mb-3">
+                      <label for="regimen" class="form-label" style="color:#000000;">Regimen</label>
+                      <input type="text" class="form-control" id="regimen" name="regimen" value="" required>
+                  </div>
+                  <div class="mb-3">
+                      <label for="cuenta" class="form-label" style="color:#000000;">Cuenta</label>
+                      <input type="number" min="0" class="form-control" id="cuenta" name="cuenta" value="" required>
+                  </div>
+                  <div class="mb-3">
+                      <label for="proveedor" class="form-label" style="color:#000000;">Proveedor</label>
+                      <input type="text" class="form-control" id="proveedor" name="proveedor" value="" required>
+                  </div>
                   <button type="submit" class="btn app-btn-primary">Agregar Contrato</button>
                 </form>
 					    </div><!--//app-card-body-->

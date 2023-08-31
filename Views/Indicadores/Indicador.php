@@ -45,7 +45,7 @@
           <div class="row g-4 mb-4">
 				    <div class="col-6 col-lg-3">
 					    <div class="app-card app-card-stat shadow-sm h-100">
-						    <div class="app-card-body p-3 p-lg-4" style="background-color:#2ECC71;">
+						    <div class="app-card-body p-3 p-lg-4" style="background-color:<?=$data8[0]['codigo'];?>">
 							    <h4 class="stats-type mb-1" style="color:#FFFFFF;">Nivel de Atención</h4>
 							    <div class="stats-figure" style="color:#FFFFFF;"><?=number_format($data4['colima'],2)?><span>%</span></div>
 							    <div class="stats-meta" style="color:#FFFFFF"> OOADR <span style="font-weight: bold;">COLIMA <?=date('Y')?></span></div>
@@ -56,7 +56,7 @@
 
 				    <div class="col-6 col-lg-3">
 					    <div class="app-card app-card-stat shadow-sm h-100">
-						    <div class="app-card-body p-3 p-lg-4" style="background-color:#F39C12;">
+						    <div class="app-card-body p-3 p-lg-4" style="background-color:<?=$data8[1]['codigo'];?>">
 							    <h4 class="stats-type mb-1" style="color:#FFFFFF;">Nivel de Atención</h4>
 							    <div class="stats-figure" style="color:#FFFFFF;"><?=number_format($data4['nacional'],2)?><span>%</span></div>
 							    <div class="stats-meta" style="color:#FFFFFF;">Media <span style="font-weight: bold;">Nacional <?=date('Y')?></span></div>

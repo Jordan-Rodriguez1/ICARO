@@ -19,6 +19,13 @@ class Despachos extends Controllers //Aquí se debe llamas igual que el archivo
     $this->views->getView($this, "Registro", "", $data1);
     }
 
+    // Muestra la vista "Registro" con los datos obtenidos de los modelos.
+    public function eliminar() {
+        $id = $_GET['id'];
+        $this->model->eliminar($id);
+        header("location: " . base_url() . "Inicio/Home");
+    }
+
     public function agregar() {
         if (isset($_POST['negadas'])) {
             $negadas = 1;

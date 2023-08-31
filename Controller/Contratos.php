@@ -26,6 +26,31 @@
             $this->views->getView($this, "Registro", "", $data1, $data2, $data3, $data4);
         }
 
+        // Muestra la vista "Registro" con los datos obtenidos de los modelos.
+        public function Editar() {
+            $contrato = $_GET['contrato'];
+            $data1 = $this->model->SelectAreas();
+            $data2 = $this->model->SelectTipo();
+            $data3 = $this->model->SelectPlataforma();
+            $data4 = $this->model->usuario();
+            $data5 = $this->model->cont($contrato);
+            $data6 = $this->model->contd($contrato);
+            $this->views->getView($this, "Editar", "", $data1, $data2, $data3, $data4, $data5, $data6);
+        }
+
+        // Muestra la vista "Registro" con los datos obtenidos de los modelos.
+        public function Eliminar() {
+            $contrato = $_GET['contrato'];
+            $this->model->eliminarcontrato($contrato);
+            $this->model->eliminarcontratod($contrato);
+            $this->model->eliminardetallecont($contrato);
+            $this->model->eliminarvalidarcont($contrato);
+            $this->model->eliminarformatos($contrato);
+
+            $alert = 'registrado';
+            header("location: " . base_url() . "Contratos/General?msg=$alert");
+        }
+
         // Agrega un nuevo contrato a la base de datos con los datos proporcionados mediante el formulario.
         public function agregar() {
             if (isset($_POST['contrato'])) {
@@ -46,13 +71,20 @@
             $fecha_termina = date("Y-m-d", strtotime("+1 year"));
             $devengo = 0; // default
 
+            //Nuevos valores
+            $inicio = limpiarInput($_POST['inicio']);
+            $regimen = limpiarInput($_POST['regimen']);
+            $proveedor = limpiarInput($_POST['proveedor']);
+            $cuenta = limpiarInput($_POST['cuenta']);
+
             $insert = $this->model->agregarContrato($numero, $descripcion, $area, $requiriente, $administrador, $tipo, $termino, $maximo, $fianza, $plataforma, $fecha_termina, $devengo, $categoria);
             if ($insert == 'existe') {
                 $alert = 'existe';
                 header("location: " . base_url() . "Contratos/Registro?msg=$alert");
             } else if ($insert > 0) {
+                //Agrega los valores restantes
+                $insert = $this->model->agregarContratod($numero, $inicio, $regimen, $proveedor, $cuenta);
                 //Si se agrega te redirige a la vista "General" con un mensaje de alerta.
-
                 $data = $this->model->selectUsuario($requiriente);
                 $asunto = 'Creacion de Contrato';
                 $correo = $data['correo'];
@@ -70,6 +102,54 @@
             die();
         }
 
+        // Agrega un nuevo contrato a la base de datos con los datos proporcionados mediante el formulario.
+        public function editarc() {
+            if (isset($_POST['contrato'])) {
+                $categoria = "Contrato";
+            } else {
+                $categoria = "Convenio";
+            }
+            $numero = limpiarInput($_POST['numero']);
+            $descripcion = limpiarInput($_POST['descripcion']);
+            $area = limpiarInput($_POST['area']);
+            $requiriente = limpiarInput($_POST['requiriente']);
+            $administrador = limpiarInput($_SESSION['id']);
+            $tipo = limpiarInput($_POST['tipo']);
+            $termino = limpiarInput($_POST['termino']);
+            $maximo = limpiarInput($_POST['maximo']);
+            $fianza = limpiarInput($_POST['fianza']);
+            $plataforma = limpiarInput($_POST['plataforma']);
+            $fecha_termina = date("Y-m-d", strtotime("+1 year"));
+            $devengo = 0; // default
+
+            //Nuevos valores
+            $inicio = limpiarInput($_POST['inicio']);
+            $regimen = limpiarInput($_POST['regimen']);
+            $proveedor = limpiarInput($_POST['proveedor']);
+            $cuenta = limpiarInput($_POST['cuenta']);
+
+            $contratodetalle = $this->model->contd($numero);
+
+            $insert = $this->model->acttualizarContrato($numero, $descripcion, $area, $requiriente, $administrador, $tipo, $termino, $maximo, $fianza, $plataforma, $fecha_termina, $devengo, $categoria);
+             if ($insert > 0) {
+                //Agrega los valores restantes
+                if ($contratodetalle != null) {
+                    $insert = $this->model->acttualizarContratod($numero, $inicio, $regimen, $proveedor, $cuenta);
+                } else {
+                    $insert = $this->model->agregarContratod($numero, $inicio, $regimen, $proveedor, $cuenta);
+                }
+
+                //Si se agrega te redirige a la vista "General" con un mensaje de alerta.
+                $alert = 'registrado';
+                header("location: " . base_url() . "Contratos/General?msg=$alert");
+            } else {
+                $alert = 'error';
+                header("location: " . base_url() . "Contratos/Registro?msg=$alert");
+            }
+            die();
+        }
+
+
         // Muestra la vista "General" con los datos obtenidos de los modelos.
         public function General() {
             $data1 = $this->model->selectContratos();
@@ -78,8 +158,10 @@
             $data4 = $this->model->tipocontrato();
             $data5 = $this->model->tipoplatformaconv();
             $data6 = $this->model->PgsBarContr(); 
-            $data7 = $this->model->devengo();       
-        $this->views->getView($this, "General", "", $data1, $data2, $data3, $data4, $data5, $data6, $data7);
+            $data7 = $this->model->devengo();  
+            $data8 = $this->model->selectContratosd();  
+
+        $this->views->getView($this, "General", "", $data1, $data2, $data3, $data4, $data5, $data6, $data7, $data8);
         }
 
         //Datos para la gráfica de contratos
@@ -323,6 +405,33 @@
             $noti = $this->model->notifica($asunto, $msg, $cont['requiriente']);
 
             header("location: " . base_url() . "Contratos/Foro?contrato=$number");
+            die();
+        }
+
+        public function noformalizar(){
+            $number = limpiarInput($_GET['contrato']);
+            $estado = 5;
+            $actualizar = $this->model->actualizaEstado($estado, $number);
+
+            $cont = $this->model->selectReq($number);
+            $data = $this->model->selectUsuario($cont['id_creador']);
+            $asunto = 'Descarte de Contrato';
+            $correo = $data['correo'];
+            $nombre = $data['nombre'];
+            $msg = $_SESSION['nombre'].' ha puesto el contrato '.$numero.'. en el que estás como administrador como NO FORMALIZADO.';
+            correo($msg, $asunto, $correo, $nombre);
+            $noti = $noti = $this->model->notifica($asunto, $msg, $cont['id_creador']);
+
+            $cont = $this->model->cont($number);
+            $data = $this->model->selectUsuario($cont['requiriente']);
+            $asunto = 'Validacion de Contrato';
+            $correo = $data['correo'];
+            $nombre = $data['nombre'];
+            $msg = $_SESSION['nombre'].' ha formalizado el contrato '.$numero.'. en el que estás como requiriente como NO FORMALIZADO.';
+            correo($msg, $asunto, $correo, $nombre);
+            $noti = $this->model->notifica($asunto, $msg, $cont['requiriente']);
+
+            header("location: " . base_url() . "Contratos/General?contrato=$number");
             die();
         }
         

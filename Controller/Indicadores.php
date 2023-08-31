@@ -20,7 +20,9 @@ class Indicadores extends Controllers //Aquí se debe llamas igual que el archiv
         $data5 = $this->model->nacional();
         $data6 = $this->model->maxnegada();
         $data7 = $this->model->promnegadas();
-        $this->views->getView($this, "Indicador", "", $data1, $data2, $data3, $data4, $data5, $data6, $data7);
+        $data8 = $this->model->colores();
+
+        $this->views->getView($this, "Indicador", "", $data1, $data2, $data3, $data4, $data5, $data6, $data7, $data8);
     }
 
     //Datos para la gráfica de clinicas

@@ -16,7 +16,10 @@ class Pedidos extends Controllers //Aquí se debe llamas igual que el archivo
         //$id = $_GET['id'];
         $data1= $this->model->SelectPedido();
         $data2 = $this->model->SelectFecha();
-    $this->views->getView($this, "Compras", "", $data1, $data2);
+        $data3 = $this->model->totalPedidos();
+        $data4 = $this->model->totalEntregado();
+        
+    $this->views->getView($this, "Compras", "", $data1, $data2, $data3, $data4);
     }
 
     public function Pagado(){
@@ -164,7 +167,7 @@ class Pedidos extends Controllers //Aquí se debe llamas igual que el archivo
                 }
             }
             $alert = "cargado";
-            header("location: " . base_url() . "Excel/Subir?msg=$alert&a=$a&e=$e&x=$x");
+            header("location: " . base_url() . "Excel/Subir?msg=$alert&a=$a&e=$e");
         }else{
             $alert = "error";
             header("location: " . base_url() . "Excel/Subir?msg=$alert");

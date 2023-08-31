@@ -13,7 +13,7 @@
         <footer class="app-footer">
             <hr class="my-1">
 		    <div class="container text-center py-3">
-                <small class="copyright">Diseño y Desarrollo por OOADR. Coordinación de Abastecimiento y Equipamiento.</small>
+                <small class="copyright">Diseño y Desarrollo por la Coordinación de Abastecimiento y Equipamiento del OOADR del IMSS en colima. V 1.2.0</small>
 		    </div>
 	    </footer><!--//app-footer-->
     </div><!--//app-wrapper-->
@@ -146,9 +146,8 @@
             { table_data: 'clave' },
             { table_data: 'cantidad' },
             { table_data: 'eta' },
-            { table_data: 'topn' },
             { table_data: 'monto' },
-            { table_data: 'fecha_alta' },
+            { table_data: 'alta' },
             {
                 table_data: 'monto2',
                 render: function(table_data, type, row) {
@@ -401,6 +400,7 @@
     });
     $(document).ready(function() {
         $('#TableN').DataTable({
+            order: [[5,'desc']],
             responsive: true,
             "lengthChange": false,
             "searching": false,

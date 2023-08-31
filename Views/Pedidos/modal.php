@@ -18,7 +18,7 @@
             
             <div class="form-group">
               <label  for="monto" class="form-label" style="color:#000000;">Monto $</label>
-              <input type="number" class="form-control" name="monto2" id="monto2" required/>                            
+              <input type="text" class="form-control" name="monto2" id="monto2" required/>                            
             </div>                       
           </div>
           <div class="card-footer">
@@ -29,3 +29,25 @@
       </div>
     </div>
   </div>
+
+  <script>
+    $(document).ready(function() {
+    $('#monto2').on('input', function() {
+        // Obtener el valor ingresado
+        var inputVal = $(this).val();
+
+        // Validar si es un número decimal
+        if (!isValidDecimal(inputVal)) {
+            $(this).addClass('is-invalid');
+        } else {
+            $(this).removeClass('is-invalid');
+        }
+    });
+
+    function isValidDecimal(value) {
+        // Expresión regular para validar números decimales
+        var decimalRegex = /^\d+(\.\d{1,2})?$/;
+        return decimalRegex.test(value);
+    }
+});
+  </script>

@@ -70,20 +70,16 @@ $final2=0;
 $final3=0;
 $total_pedi2=0;
 $total_contratado=0;
-$total_entregado=0;
-$total_por_entregar=0;
-$z=0;
+$total_entregado= $data4['suma_montos'];
+$total_enlazado= 0;
+
+
+
 foreach ($data1 as $pedi2){
-  if(substr($pedi2['nopedido'], 0, 3) === "D3P"){
-  $z++;
-  }
   $total_pedi2=$total_pedi2+$pedi2['cantidad'];
   $total_contratado=$total_contratado+$pedi2['monto'];
   if($pedi2['monto2']!=0){
-    $total_entregado=$total_entregado+$pedi2['monto'];
-  }
-  if($pedi2['monto2']==0){
-    $total_por_entregar=$total_por_entregar+$pedi2['monto'];
+    $total_enlazado=$total_enlazado+$pedi2['monto'];
   }
   if($pedi2['tipo']=="010" || $pedi2['tipo']=="020" || $pedi2['tipo']=="030" || $pedi2['tipo']=="040"){
   $final=$final+$pedi2['cantidad'];
@@ -96,6 +92,8 @@ foreach ($data1 as $pedi2){
     $resultado=$total_pedi2-$final3;
   }
 };
+$total_por_entregar=$total_contratado-$total_entregado;
+$total_noenlazado=$total_entregado-$total_enlazado;
 ?>
 <?php //$i=0; while($pedidos=mysqli_fetch_array($queryCliente)){ if($pedidos['tipo']=="010" || $pedidos['tipo']=="020" || $pedidos['tipo']=="030" || $pedidos['tipo']=="040") $final=intval($final+$pedidos['cantidad']);}?> 
 <div class="app-card app-card-stats-table h-100 shadow-sm">                    
@@ -112,10 +110,40 @@ foreach ($data1 as $pedi2){
       <tbody>
           <tr>      
             <td  >Total Pedidos</td>
-            <td style="text-align:center"><?= $z ?></td>
+            <td style="text-align:center"><?= $data3['total_pedidos_diferentes'] ?></td>
             <!--<td class="stat-cell"><div class="progress">
 <div class="progress-bar bg-success" role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
 </div></td>      -->                                  
+          </tr>
+          <tr>
+              <td >Total Contratado</td>
+              <td style="text-align:center">$ <?php echo  number_format($total_contratado); ?></td>                                        
+              <!--<td class="stat-cell">
+				<div class="progress">
+<div class="progress-bar bg-success" role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+</div></td>-->
+          </tr>
+					<tr>
+              <td>Total Entregado</td>
+              <td style="text-align:center">$ <?php echo number_format($total_entregado); ?></td>                                        
+              <td class="stat-cell">
+				<div class="progress">
+<div class="progress-bar bg-success" role="progressbar" style="width: <?php echo number_format($total_entregado/$total_contratado*100,2);?>%;"  aria-valuemin="0" aria-valuemax="100"><?php echo number_format($total_entregado/$total_contratado*100,2);?>%</div>
+</div></td>
+          </tr>
+              <td>Total Enlazado</td>
+              <td style="text-align:center">$ <?php echo number_format($total_enlazado); ?></td>                                        
+              <td class="stat-cell">
+				<div class="progress">
+<div class="progress-bar bg-success" role="progressbar" style="width: <?php echo number_format($total_enlazado/$total_entregado*100,2);?>%;"  aria-valuemin="0" aria-valuemax="100"><?php echo number_format($total_enlazado/$total_entregado*100,2);?>%</div>
+</div></td>
+          </tr>
+              <td>No Enlazado</td>
+              <td style="text-align:center">$ <?php echo number_format($total_noenlazado); ?></td>                                        
+              <td class="stat-cell">
+				<div class="progress">
+<div class="progress-bar bg-success" role="progressbar" style="width: <?php echo number_format($total_noenlazado/$total_entregado*100,2);?>%;"  aria-valuemin="0" aria-valuemax="100"><?php echo number_format($total_noenlazado/$total_entregado*100,2);?>%</div>
+</div></td>
           </tr>
           <tr>
             <td  >Pedidos Medicamento</td>
@@ -142,22 +170,7 @@ foreach ($data1 as $pedi2){
 <div class="progress-bar bg-success" role="progressbar" style="width: <?php echo number_format($resultado*100/$total_pedi2,2);?>%;"  aria-valuemin="0" aria-valuemax="100"><?php echo number_format($resultado*100/$total_pedi2,2);?>%</div>
 </div></td>
           </tr>
-          <tr>
-              <td >Total Contratado</td>
-              <td style="text-align:center">$ <?php echo  number_format($total_contratado); ?></td>                                        
-              <!--<td class="stat-cell">
-				<div class="progress">
-<div class="progress-bar bg-success" role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-</div></td>-->
-          </tr>
-					<tr>
-              <td>Total Entregado</td>
-              <td style="text-align:center">$ <?php echo number_format($total_entregado); ?></td>                                        
-              <td class="stat-cell">
-				<div class="progress">
-<div class="progress-bar bg-success" role="progressbar" style="width: <?php echo number_format($total_entregado/$total_contratado*100,2);?>%;"  aria-valuemin="0" aria-valuemax="100"><?php echo number_format($total_entregado/$total_contratado*100,2);?>%</div>
-</div></td>
-          </tr>
+
 					<tr>
               <td>Total Por Entregar</td>
               <td style="text-align:center">$ <?php echo number_format($total_por_entregar); ?></td>                                        
@@ -187,11 +200,10 @@ foreach ($data1 as $pedi2){
                         <th class="cell" style="visibility:collapse; display:none;">Id</th>
                         <th class="cell"><span></span>No. Pedido</th>
                         <th class="cell">GPO</th>
-                        <th class="cell">Clave</th>
+                        <th class="cell">ESP</th>
                         <th class="cell">Cantidad</th>
                         <th class="cell">ETA</th>
-                        <th class="cell">Top 15</th>
-                        <th class="cell">$ IVA precio</th>
+                        <th class="cell">$ Importe</th>
                         <th class="cell">Alta</th>
                         <th class="cell">Enlazar</th>
                       </tr>

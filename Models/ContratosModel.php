@@ -48,6 +48,15 @@
         }
 
         //Selecciona datos de usuario
+        public function contd(string $usuario)
+        {
+            $this->usuario = $usuario;
+            $sql = "SELECT * FROM contratosd WHERE numero = '{$this->usuario}'";
+            $res = $this->select($sql);
+            return $res;
+        }
+
+        //Selecciona datos de usuario
         public function selectContratoC(string $usuario)
         {
             $this->usuario = $usuario;
@@ -120,11 +129,73 @@
             }
             return $return;
         }
+
+        // Agrega un nuevo contrato a la base de datos. Datos adicionales
+        public function agregarContratod(string $numero, string $inicio, string $regimen, string $proveedor, string $cuenta) {
+            $return = "";
+            $this->numero = $numero;
+            $this->inicio = $inicio;
+            $this->regimen = $regimen;
+            $this->proveedor = $proveedor;
+            $this->cuenta = $cuenta;
+
+            $query = "INSERT INTO contratosd(numero, inicio, regimen, proveedor, cuenta) VALUES (?,?,?,?,?)";
+            $data = array($this->numero, $this->inicio, $this->regimen,$this->proveedor, $this->cuenta);
+            $resul = $this->insert($query, $data);
+            $return = $resul;
+        }
     
+        // Agrega un nuevo contrato a la base de datos.
+        public function acttualizarContrato(string $numero, string $descripcion, string $area, string $requiriente, string $administrador, string $tipo, string $termino, string $maximo, string $fianza, string $plataforma, string $fecha_termina, string $devengo, string $categoria) {
+            $return = "";
+            $this->numero = $numero;
+            $this->descripcion = $descripcion;
+            $this->area = $area;
+            $this->requiriente = $requiriente;
+            $this->administrador = $administrador;
+            $this->tipo = $tipo;
+            $this->termino = $termino;
+            $this->maximo = $maximo;
+            $this->devengo = $devengo;
+            $this->fianza = $fianza;
+            $this->plataforma = $plataforma;
+            $this->fecha_termina = $fecha_termina;
+            $this->categoria = $categoria;
+            
+            $query = "UPDATE contratos SET contratos.descripcion = ?, contratos.area = ?, contratos.requiriente = ?, contratos.administrador = ?, contratos.tipo = ?, contratos.termino = ?, contratos.maximo = ?, contratos.fianza = ?, contratos.plataforma = ?, contratos.fecha_eliminar = ?, contratos.categoria = ? WHERE numero=?";       
+            $data = array($this->descripcion, $this->area,$this->requiriente, $this->administrador, $this->tipo, $this->termino, $this->maximo, $this->fianza, $this->plataforma, $this->fecha_termina, $this->categoria, $this->numero);
+            $resul = $this->update($query, $data);
+            $return = $resul;
+
+            return $return;
+        }
+
+        // Agrega un nuevo contrato a la base de datos. Datos adicionales
+        public function acttualizarContratod(string $numero, string $inicio, string $regimen, string $proveedor, string $cuenta) {
+            $return = "";
+            $this->numero = $numero;
+            $this->inicio = $inicio;
+            $this->regimen = $regimen;
+            $this->proveedor = $proveedor;
+            $this->cuenta = $cuenta;
+
+            $query = "UPDATE contratosd SET contratosd.inicio = ?, contratosd.regimen = ?, contratosd.proveedor = ?, contratosd.cuenta = ? WHERE numero=?";       
+            $data = array($this->inicio, $this->regimen,$this->proveedor, $this->cuenta, $this->numero);
+            $resul = $this->update($query, $data);
+            $return = $resul;
+
+        }
+
         //VISTA GENERAL
         // Selecciona todos los contratos de la base de datos.
         public function selectContratos() {
             $sql = "SELECT contratos.*, usuarios.nombre FROM contratos, usuarios WHERE contratos.administrador = usuarios.id;";
+            $res = $this->select_all($sql);
+            return $res;
+        }
+
+        public function selectContratosd() {
+            $sql = "SELECT * FROM contratosd;";
             $res = $this->select_all($sql);
             return $res;
         }
@@ -380,6 +451,63 @@
             $res = $this->select($sql);
             return $res;
         }
+
+    //Elimina los datos de contrato
+    public function eliminarcontrato(string $id)
+    {
+        $return = "";
+        $this->id = $id;
+        $query = "DELETE FROM contratos WHERE numero = '{$this->id}'";
+        $resul = $this->delete($query); //DELATE es para ELIMINAR un registro
+        $return = $resul;
+        return $return;
+    }
+
+    //Elimina los datos de contrato
+    public function eliminarcontratod(string $id)
+    {
+        $return = "";
+        $this->id = $id;
+        $query = "DELETE FROM contratosd WHERE numero = '{$this->id}'";
+        $resul = $this->delete($query); //DELATE es para ELIMINAR un registro
+        $return = $resul;
+        return $return;
+    }
+
+    //Elimina los datos de contrato
+    public function eliminardetallecont(string $id)
+    {
+        $return = "";
+        $this->id = $id;
+        $query = "DELETE FROM detalle_cont WHERE contrato = '{$this->id}'";
+        $resul = $this->delete($query); //DELATE es para ELIMINAR un registro
+        $return = $resul;
+        return $return;
+    }
+
+    //Elimina los datos de contrato
+    public function eliminarvalidarcont(string $id)
+    {
+        $return = "";
+        $this->id = $id;
+        $query = "DELETE FROM validar_cont WHERE id_contrato = '{$this->id}'";
+        $resul = $this->delete($query); //DELATE es para ELIMINAR un registro
+        $return = $resul;
+        return $return;
+    }
+
+    //Elimina los datos de contrato
+    public function eliminarformatos(string $id)
+    {
+        $return = "";
+        $this->id = $id;
+        $query = "DELETE FROM formatos WHERE contrato = '{$this->id}'";
+        $resul = $this->delete($query); //DELETE es para ELIMINAR un registro
+        $return = $resul;
+        return $return;
+    }
+
+
 
     }
 ?>

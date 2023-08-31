@@ -8,9 +8,8 @@ $table_data->get('vista_pedidos', 'id', array(
   'clave',
   'cantidad',
   'eta',
-  'topn',
   'monto',
-  'fecha_alta',
+  'noalta',
   'monto2',
 ));
 
