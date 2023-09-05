@@ -70,6 +70,13 @@ class InicioModel extends Mysql{
         return $res;
     }
 
+    public function selectRegimen()
+    {        
+        $sql ="SELECT * FROM regimen";
+        $res= $this->select_all($sql);
+        return $res;
+    }
+
     public function despachos(string $hoy){   
         $this->hoy=$hoy;     
         $sql = "SELECT despachos.*, unidades.abreviacion FROM despachos, unidades WHERE despachos.unidad = unidades.id AND cast(fecha_entrega AS DATE) = '{$this->hoy}'";
@@ -299,6 +306,29 @@ class InicioModel extends Mysql{
         $return = "";
         $this->id = $id;
         $query = "DELETE FROM tipos WHERE id= '{$this->id}'";
+        $resul = $this->delete($query);
+        $return = $resul;
+        return $return;
+    }
+
+    //Agrega Regimen
+    public function AgregarRegimen(string $Tipo, string $Usuario)
+    {
+        $return = "";
+        $this->Tipo = $Tipo;
+        $this->Usuario = $Usuario;
+        $query = "INSERT INTO regimen(regimen) VALUES (?)";
+        $data = array($this->Tipo);
+        $resul = $this->insert($query, $data);
+        return $resul;
+    }
+
+    //Elimina Regimen
+    public function EliminarRegimen(int $id)
+    {
+        $return = "";
+        $this->id = $id;
+        $query = "DELETE FROM regimen WHERE id= '{$this->id}'";
         $resul = $this->delete($query);
         $return = $resul;
         return $return;

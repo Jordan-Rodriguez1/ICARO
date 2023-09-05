@@ -88,10 +88,14 @@
                                                         echo "Almacén";
                                                     } ?> </td>
                                                 <td>
-                                                    <a title="Editar" href="<?php echo base_url() ?>Usuarios/editar?id=<?php echo $us['id']; ?>" class="btn btn-primary mb-2"><i class="fas fa-edit"></i></a>
-                                                    <form id="formulario2" action="<?php echo base_url() ?>Usuarios/eliminar?id=<?php echo $us['id']; ?>" method="post" class="d-inline elim">
-                                                        <button title="Inactivar" type="submit" class="btn btn-secondary mb-2"><i class="fas fa-user-slash"></i></button>
-                                                    </form>            
+                                                    <?php if($us['id'] == 0){ ?>
+                                                        SIN ACCIONES
+                                                    <?php } else { ?>
+                                                        <a title="Editar" href="<?php echo base_url() ?>Usuarios/editar?id=<?php echo $us['id']; ?>" class="btn btn-primary mb-2"><i class="fas fa-edit"></i></a>
+                                                        <form id="formulario2" action="<?php echo base_url() ?>Usuarios/eliminar?id=<?php echo $us['id']; ?>" method="post" class="d-inline elim">
+                                                            <button title="Inactivar" type="submit" class="btn btn-secondary mb-2"><i class="fas fa-user-slash"></i></button>
+                                                        </form>   
+                                                    <?php } ?>         
                                                 </td>
                                             </tr>
                                         <?php } }?>

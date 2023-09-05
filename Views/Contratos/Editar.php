@@ -102,7 +102,11 @@
                   </div>       
                   <div class="mb-3">
                       <label for="regimen" class="form-label" style="color:#000000;">Regimen</label>
-                      <input type="text" class="form-control" id="regimen" name="regimen" value="<?= $data6['regimen'] ?>" required>
+                      <select class="form-control" id="regimen" name="regimen" required>
+                        <?php foreach ($data7 as $regimen) { ?>
+                          <option <?php if ($regimen['regimen'] == $data6['regimen']) { echo 'selected';} ?>> <?php echo $regimen['regimen'] ?></option>
+                         <?php } ?>
+                      </select>
                   </div>
                   <div class="mb-3">
                       <label for="cuenta" class="form-label" style="color:#000000;">Cuenta</label>

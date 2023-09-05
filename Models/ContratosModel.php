@@ -146,13 +146,12 @@
         }
     
         // Agrega un nuevo contrato a la base de datos.
-        public function acttualizarContrato(string $numero, string $descripcion, string $area, string $requiriente, string $administrador, string $tipo, string $termino, string $maximo, string $fianza, string $plataforma, string $fecha_termina, string $devengo, string $categoria) {
+        public function acttualizarContrato(string $numero, string $descripcion, string $area, string $requiriente, string $tipo, string $termino, string $maximo, string $fianza, string $plataforma, string $fecha_termina, string $devengo, string $categoria) {
             $return = "";
             $this->numero = $numero;
             $this->descripcion = $descripcion;
             $this->area = $area;
             $this->requiriente = $requiriente;
-            $this->administrador = $administrador;
             $this->tipo = $tipo;
             $this->termino = $termino;
             $this->maximo = $maximo;
@@ -162,8 +161,8 @@
             $this->fecha_termina = $fecha_termina;
             $this->categoria = $categoria;
             
-            $query = "UPDATE contratos SET contratos.descripcion = ?, contratos.area = ?, contratos.requiriente = ?, contratos.administrador = ?, contratos.tipo = ?, contratos.termino = ?, contratos.maximo = ?, contratos.fianza = ?, contratos.plataforma = ?, contratos.fecha_eliminar = ?, contratos.categoria = ? WHERE numero=?";       
-            $data = array($this->descripcion, $this->area,$this->requiriente, $this->administrador, $this->tipo, $this->termino, $this->maximo, $this->fianza, $this->plataforma, $this->fecha_termina, $this->categoria, $this->numero);
+            $query = "UPDATE contratos SET contratos.descripcion = ?, contratos.area = ?, contratos.requiriente = ?, contratos.tipo = ?, contratos.termino = ?, contratos.maximo = ?, contratos.fianza = ?, contratos.plataforma = ?, contratos.fecha_eliminar = ?, contratos.categoria = ? WHERE numero=?";       
+            $data = array($this->descripcion, $this->area,$this->requiriente, $this->tipo, $this->termino, $this->maximo, $this->fianza, $this->plataforma, $this->fecha_termina, $this->categoria, $this->numero);
             $resul = $this->update($query, $data);
             $return = $resul;
 
@@ -186,10 +185,17 @@
 
         }
 
+    public function selectRegimen()
+    {        
+        $sql ="SELECT * FROM regimen";
+        $res= $this->select_all($sql);
+        return $res;
+    }
+
         //VISTA GENERAL
         // Selecciona todos los contratos de la base de datos.
         public function selectContratos() {
-            $sql = "SELECT contratos.*, usuarios.nombre FROM contratos, usuarios WHERE contratos.administrador = usuarios.id;";
+            $sql = "SELECT contratos.*, usuarios.nombre FROM contratos, usuarios WHERE contratos.requiriente = usuarios.id;";
             $res = $this->select_all($sql);
             return $res;
         }
@@ -320,6 +326,20 @@
             return $return;
         }
 
+        //Subir la ruta de archivo a BD
+        public function AgregarExpediente(string $number, string $expediente, string $folio)
+        {
+            $return = "";
+            $this->number = $number;
+            $this->expediente = $expediente;
+            $this->folio = $folio;        
+            $query = "INSERT INTO validar_contd(id_contrato, expediente, folio) VALUES (?,?,?)";
+            $data = array($this->number, $this->expediente, $this->folio);
+            $resul = $this->insert($query, $data);
+            $return = $resul;
+            return $return;
+        }
+
         //actualizar estado de contrato
         public function actualizaEstado(int $estado, string $id)
         {
@@ -328,6 +348,19 @@
             $this->estado = $estado;
             $query = "UPDATE contratos SET contratos.estado = ? WHERE numero=?";       
             $data = array($this->estado, $this->id);
+            $resul = $this->update($query, $data);
+            $return = $resul;
+            return $return;
+        }
+
+        //actualizar estado de contrato
+        public function actualizaFolio(string $folio, string $number)
+        {
+            $return = "";
+            $this->folio = $folio;
+            $this->number = $number;
+            $query = "UPDATE validar_contd SET folio = ? WHERE id_contrato=?";       
+            $data = array($this->folio, $this->number);
             $resul = $this->update($query, $data);
             $return = $resul;
             return $return;
@@ -359,6 +392,13 @@
         public function detalleContrato(string $contrato){
             $this->contrato = $contrato;
             $sql = "SELECT * FROM contratos WHERE numero = '{$this->contrato}'";
+            $res = $this->select($sql);
+            return $res;
+        }
+
+        public function detalleContratoD(string $contrato){
+            $this->contrato = $contrato;
+            $sql = "SELECT * FROM validar_contd WHERE id_contrato = '{$this->contrato}'";
             $res = $this->select($sql);
             return $res;
         }

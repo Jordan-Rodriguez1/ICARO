@@ -340,6 +340,7 @@
                             </div><!--//col-auto-->
                             <div class="col-auto">
                                 <div class="card-header-action">
+                                  <a href="<?=base_url()?>Despachos/Listar">Ver Todos</a>
                                 </div><!--//card-header-action-->
                             </div><!--//col-auto-->
                         </div><!--//row justify-content-between align-items-center-->
@@ -357,9 +358,9 @@
                             </tr>
                           </thead>
                           <tbody>
-                              <tr>
-                                <?php foreach($data7 as $despachos){?>
-                                  <td><?php if ($_SESSION['rol'] == 7) { echo "<a style='color: black; text-decoration: none;' href='".base_url()."Despachos/eliminar?id=".$despachos['id']."'>".$despachos['abreviacion']."</a>"; } else {echo $despachos['abreviacion']; }?></td>
+                              <?php foreach($data7 as $despachos){?>
+                                <tr>
+                                  <td><?= $despachos['abreviacion']; ?></td>
                                   <td><span class="badge bg-success"><a class="text-decoration-none text-white" href="<?= base_url().'Assets/Documentos/Despachos/'.$despachos['archivo'];?>" Target="_blank"><?= $despachos['remision'];?></a></span></td>
                                   <td><?= $despachos['eco'];?></td>
                                   <td><?= substr($despachos['fecha_entrega'],10,6);?></td>
@@ -371,10 +372,10 @@
                                   <?php }elseif($despachos['negadas']==1){?>
                                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-star-fill" viewBox="0 0 16 16">
                                     <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
-                                  </svg></td>
-                                  <?php }?>
+                                  </svg>
+                                  <?php }?></td>
                               </tr>
-                              <?php }?>
+                            <?php }?>
                           </tbody>
                         </table>
                       </div><!--//table-responsive-->

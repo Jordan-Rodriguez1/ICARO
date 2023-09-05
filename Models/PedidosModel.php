@@ -54,17 +54,14 @@ class PedidosModel extends Mysql{ //El archivo se debe llamar igual que el contr
         return $resul;
     }
 
-    //Edita los datos de un usuario
-    public function actualizarUsuarios(string $nombre, string $usuario, string $rol, int $id, string $correo)
+    //Desenlazar
+    public function Desenlazar(string $monto2, string $id)
     {
         $return = "";
-        $this->nombre = $nombre;
-        $this->usuario = $usuario;
-        $this->rol = $rol;
         $this->id = $id;
-        $this->correo = $correo;
-        $query = "UPDATE usuarios SET nombre=?, usuario=?, rol=?, correo=? WHERE id=?";
-        $data = array($this->nombre, $this->usuario, $this->rol, $this->correo, $this->id);
+        $this->monto2 = $monto2;
+        $query = "UPDATE pedidos SET monto2=? WHERE id=?";
+        $data = array($this->monto2, $this->id);
         $resul = $this->update($query, $data); //Update es para actualizar un registro
         $return = $resul;
         return $return;

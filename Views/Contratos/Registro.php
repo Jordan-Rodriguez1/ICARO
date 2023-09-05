@@ -102,7 +102,11 @@
                   </div>       
                   <div class="mb-3">
                       <label for="regimen" class="form-label" style="color:#000000;">Regimen</label>
-                      <input type="text" class="form-control" id="regimen" name="regimen" value="" required>
+                      <select class="form-control" id="regimen" name="regimen" required>
+                        <?php foreach ($data5 as $regimen) { ?>
+                          <option> <?php echo $regimen['regimen'] ?></option>
+                         <?php } ?>
+                      </select>
                   </div>
                   <div class="mb-3">
                       <label for="cuenta" class="form-label" style="color:#000000;">Cuenta</label>
@@ -118,6 +122,46 @@
 					  </div><!--//app-card-->
 	        </div>
         </div><!--//row-->
+        <?php if($_SESSION['rol'] == 7){ ?>
+		      <hr class="mb-4">
+            <div class="row g-4 settings-section">
+	            <div class="col-12 col-md-4">
+	              <h3 class="section-title">Cargar Contratos/Convenios</h3>
+	              <div class="section-intro">Favor de llenar el csv y subir el archivo. <br> <strong>Nota:</strong>  los contratos cargardos aquí aparecerán como formalizados.</div><br>
+                  <?php if (isset($_GET['msg'])) {
+                      $alert = $_GET['msg'];
+                      if ($alert == "bien") { ?>
+                          <div class="alert alert-success" role="alert">
+	                          <h3 class="section-title">FINALIZADO</h3>
+	                          <div class="section-intro">Se cargaron los contratos con éxito.</div>
+                          </div>
+                      <?php } else if ($alert == "mal") { ?>
+                          <div class="alert alert-danger" role="alert">
+	                          <h3 class="section-title">ERROR</h3>
+	                          <div class="section-intro">No se pudieron registrar los Contratos, intente de nuevo o cantacte a soporte.</div>
+                          </div>
+                      <?php }
+                  } ?>
+	            </div>
+	            <div class="col-12 col-md-8">
+	              <div class="app-card app-card-settings shadow-sm p-4">
+				  	      <div class="app-card-body">
+                    <form id="formulario2" method="POST" action="<?php echo base_url(); ?>Contratos/agregarmuchos" enctype="multipart/form-data" autocomplete="off">
+                    <div class="mb-3">
+                      <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="file-input" accept="csv" name="archivo" required>
+                        <label class="custom-file-label" for="customFile">Seleccione Archivo</label>
+                        <label><br><strong>Nota:</strong> Solo se permiten archivos CSV, con un tamaño máximo de 20MB, en caso de que el archivo no cumpla con alguna de estas indicaciones no se subirá.</label>
+                      </div>
+                    </div>
+                    <button type="submit" class="btn app-btn-primary mb-2">Agregar Contratos</button>&nbsp
+                    <a class="btn btn-info mb-2" href="<?php echo base_url(); ?>Assets/Documentos/Exportaciones/FormatoContratos.csv">Descargar Formato</a>
+                  </form>
+				  	    </div><!--//app-card-body-->
+				  	  </div><!--//app-card-->
+	          </div>
+          </div><!--//row-->
+        <?php } ?>
 	    </div><!--//container-fluid-->
 	  </div><!--//app-content-->
   </div><!--//app-wrapper-->    

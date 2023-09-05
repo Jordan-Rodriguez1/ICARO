@@ -273,8 +273,9 @@ class Inicio extends Controllers
         $data4 = $this->model->SelectTipoContratacion();
         $data5 = $this->model->selectDictamen();
         $data6 = $this->model->selectColores();
+        $data7 = $this->model->selectRegimen();
 
-        $this->views->getView($this, "Configuracion", "", $data1, $data2, $data3, $data4, $data5,$data6);
+        $this->views->getView($this, "Configuracion", "", $data1, $data2, $data3, $data4, $data5, $data6, $data7);
         die();
     }
 
@@ -386,6 +387,35 @@ class Inicio extends Controllers
         $id = $_GET['id'];
         $eliminar = $this->model->eliminarTipo($id);
         $alert =  'TipoElim';
+        $data1 = $this->model->SelectAreas();
+        $data2 = $this->model->SelectTipo();
+        $data3 = $this->model->SelectPlataforma();
+        $data4 = $this->model->SelectTipoContratacion();
+        header("location: " . base_url() . "Inicio/Configuracion?msg=$alert");
+        die();
+    }
+
+    //Agregar Regimen
+    public function AgregarRegimen()
+    {
+        $Tipo = $_POST['tipore'];
+        $Usuario = $_SESSION['id'];
+        $Agregar = $this->model->agregarRegimen($Tipo, $Usuario);
+        $alert =  'RegimenAgre';
+        $data1 = $this->model->SelectAreas();
+        $data2 = $this->model->SelectTipo();
+        $data3 = $this->model->SelectPlataforma();
+        $data4 = $this->model->SelectTipoContratacion();
+        header("location: " . base_url() . "Inicio/Configuracion?msg=$alert");
+        die();
+    }
+
+    //Eliminar Regimen
+    public function EliminarRegimen()
+    {
+        $id = $_GET['id'];
+        $eliminar = $this->model->eliminarRegimen($id);
+        $alert =  'RegimenElim';
         $data1 = $this->model->SelectAreas();
         $data2 = $this->model->SelectTipo();
         $data3 = $this->model->SelectPlataforma();

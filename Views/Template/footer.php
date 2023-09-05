@@ -13,7 +13,7 @@
         <footer class="app-footer">
             <hr class="my-1">
 		    <div class="container text-center py-3">
-                <small class="copyright">Diseño y Desarrollo por la Coordinación de Abastecimiento y Equipamiento del OOADR del IMSS en colima. V 1.2.0</small>
+                <small class="copyright">Diseño y Desarrollo por la Coordinación de Abastecimiento y Equipamiento del OOADR del IMSS en colima. V 1.3.0</small>
 		    </div>
 	    </footer><!--//app-footer-->
     </div><!--//app-wrapper-->
@@ -139,20 +139,26 @@
                 createdCell: function (td, cellData, rowData, row, col) {
                      $(td).attr('style', 'visibility:collapse; display:none;');
                 }
-            
             },
             { table_data: 'nopedido' },
             { table_data: 'tipo' },
             { table_data: 'clave' },
             { table_data: 'cantidad' },
             { table_data: 'eta' },
-            { table_data: 'monto' },
+            { table_data: 'monto',
+                render: function(data, type, row) {
+                    if (type === 'display' || type === 'filter') {
+                        return '$' + parseFloat(data).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+                    }
+                    return data;
+                }
+            },
             { table_data: 'alta' },
             {
                 table_data: 'monto2',
                 render: function(table_data, type, row) {
                     if (table_data > 0) {
-                        return 'Enlazado';
+                        return "<div class='btn-group'><button class='btn btn-app-success des' style='padding: 0'>Enlazado</button></div>";
                     } else {
                         return "<div class='btn-group'><button class='btn btn-primary btn-sm btnEditarP'>ENLAZAR</button></div>";
                     }

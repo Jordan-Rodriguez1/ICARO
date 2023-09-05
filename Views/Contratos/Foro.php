@@ -32,13 +32,13 @@
               if ($arc['intento'] == 0) {?>
                 <a href="<?php echo base_url(); ?>Assets/Documentos/Peticiones/<?php echo $arc['nombre']; ?>" target="_blank" 
                 <?php if (strstr($arc['nombre'], ".") == ".xlsx") {?>
-                  class='btn-sm app-btn-primary'><?php echo $arc['nombre']; ?></a>
+                  class='btn-sm app-btn-primary'><?php echo $arc['nombre']; ?></a>&nbsp
                 <?php } elseif (strstr($arc['nombre'], ".") == ".zip") { ?>
-                  class='btn-sm app-btn-secondary'><?php echo $arc['nombre']; ?></a>
+                  class='btn-sm app-btn-secondary'><?php echo $arc['nombre']; ?></a>&nbsp
                 <?php } elseif (strstr($arc['nombre'], ".") == ".pdf") { ?>
-                  class='btn-sm btn-danger'><?php echo $arc['nombre']; ?></a>
+                  class='btn-sm btn-danger'><?php echo $arc['nombre']; ?></a>&nbsp
                 <?php } elseif (strstr($arc['nombre'], ".") == ".docx") { ?>
-                  class='btn-sm btn-info'><?php echo $arc['nombre']; ?></a>
+                  class='btn-sm btn-info'><?php echo $arc['nombre']; ?></a>&nbsp
                 <?php }?>
               <?php }
             } ?>
@@ -75,13 +75,13 @@
                             if ($arcv['intento'] == $validar['intento']) {?>
                               <a href="<?php echo base_url(); ?>Assets/Documentos/Foro/<?php echo $arcv['nombre']; ?>" target="_blank" 
                               <?php if (strstr($arcv['nombre'], ".") == ".xlsx") {?>
-                                class='btn-sm app-btn-primary'><?php echo $arcv['nombre']; ?></a>
+                                class='btn-sm app-btn-primary'><?php echo $arcv['nombre']; ?></a>&nbsp
                               <?php } elseif (strstr($arcv['nombre'], ".") == ".zip") { ?>
-                                class='btn-sm app-btn-secondary'><?php echo $arcv['nombre']; ?></a>
+                                class='btn-sm app-btn-secondary'><?php echo $arcv['nombre']; ?></a>&nbsp
                               <?php } elseif (strstr($arcv['nombre'], ".") == ".pdf") { ?>
-                                class='btn-sm btn-danger'><?php echo $arcv['nombre']; ?></a>
+                                class='btn-sm btn-danger'><?php echo $arcv['nombre']; ?></a>&nbsp
                               <?php } elseif (strstr($arcv['nombre'], ".") == ".docx") { ?>
-                                class='btn-sm btn-info'><?php echo $arcv['nombre']; ?></a>
+                                class='btn-sm btn-info'><?php echo $arcv['nombre']; ?></a>&nbsp
                               <?php }
                             }
                           } ?>
@@ -95,16 +95,13 @@
 			  	  </div><!--//app-card-->
         <div style="margin: 20px 0 0 0;">    
           <?php if ($_SESSION['rol'] != 5 && ($data4['estado'] <= 2)) {?>  
-            <button class="btn app-btn-secondary" data-toggle="modal" data-target="#modal1">Responder</button>
+            <button class="btn app-btn-secondary mb-2" data-toggle="modal" data-target="#modal1">Responder</button>
             <?php if ($_SESSION['rol'] == 3) {?>
-              <form action="<?php echo base_url() ?>Contratos/validar?contrato=<?php echo $data1['id_contrato']; ?>" method="post" class="d-inline validar">
-              <input type="text" id="fecha_valida" name="fecha_valida" value="<?= date('Y-m-d')?>" style="display:none;" readonly>
-              <button title="Validar" type="submit" class="btn app-btn-primary">Validar</button>
-              </form>
+              <button class="btn app-btn-primary mb-2" type="button" data-toggle="modal" data-target="#modal2">Validar</button>
             <?php }
           } elseif ($_SESSION['rol'] == 7 && ($data4['estado'] <= 3)) { ?>
             <form action="<?php echo base_url() ?>Contratos/formalizar?contrato=<?php echo $data1['id_contrato']; ?>" method="post" class="d-inline forma">
-              <button title="Formalizar" type="submit" class="btn app-btn-primary">Formalizar</button>
+              <button title="Formalizar" type="submit" class="btn app-btn-primary mb-2">Formalizar</button>
             </form>
           <?php } ?>
         </div><!--//col--> 
@@ -151,8 +148,64 @@
       </div>
     </div>
   </div>
+  <div id="modal2" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="my-modal-title" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="my-modal-title"> Desenlazar Pedido</h5>
+          <button class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form method="post" action="<?php echo base_url(); ?>Contratos/validar?contrato=<?php echo $data1['id_contrato']; ?>" autocomplete="off" class="validar">
+          <div class="modal-body">
+          <input type="text" id="fecha_valida" name="fecha_valida" value="<?= date('Y-m-d')?>" style="display:none;" readonly>
+            <div class="form-group">
+              <label for="setting-input-3" class="form-label" style="color:#000000;">No. de Folio</label>              
+              <input type="text" class="form-control" name="folio" id="folio"  value="" required/>                                                        
+            </div>
+          </div>
+          <div class="card-footer">
+              <button title="Validar" type="submit" class="btn app-btn-primary">Validar</button>
+              <button class="btn btn-danger" type="button" data-dismiss="modal"><i class="fas fa-window-close"></i> Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+<div id="modal3" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="my-modal-title" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="my-modal-title"> Desenlazar Pedido</h5>
+            </div>
+            <form method="post" action="<?php echo base_url(); ?>Contratos/expediente" autocomplete="off">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <input type="text" id="id" name="id" value="<?= $_GET['contrato'];?>" style="display:none;" readonly>
+                        <label for="setting-input-3" class="form-label" style="color:#000000;">No. de Expediente</label>              
+                        <input type="text" class="form-control" name="expediente" id="expediente"  value="" required/>                                                        
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button title="Validar" type="submit" class="btn app-btn-primary">Guardar</button>
+                    <a class="btn btn-danger" href="<?php echo base_url(); ?>Contratos/Validando">Regresar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 
 <?php }  else { ?> <!-- En caso de ser valido -->
   <?php permisos() ?> <!-- Poner el mensaje de erro -->
 <?php } ?>
 <?php pie() ?> <!-- Pone el fotter -->
+
+<?php if ($_SESSION['rol'] == 3 && $data5['id'] == null) { ;?>
+  <script>
+    $(document).ready(function () {
+      $("#modal3").modal("show");
+    });
+  </script>
+<?php } ?>

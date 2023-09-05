@@ -223,6 +223,7 @@ $total_noenlazado=$total_entregado-$total_enlazado;
     <!-- Page Specific JS -->
     <script src="assets/js/app.js"></script>
 	
-	<?php include('modal.php'); } ?>
+	<?php include('modal.php'); ?>
+	<?php include('modal2.php'); } ?>
 
 <?php pie() ?>

@@ -13,17 +13,56 @@ class Despachos extends Controllers //Aquí se debe llamas igual que el archivo
     //Aquí se debe llamar igual que la vista
     public function Registro()
     {
-        //$id = $_GET['id'];
         $data1= $this->model->SelectUnidad();
-        //$data2 = $this->model->SelectFecha();
-    $this->views->getView($this, "Registro", "", $data1);
+        $this->views->getView($this, "Registro", "", $data1);
+    }
+
+    //Aquí se debe llamar igual que la vista
+    public function Editar()
+    {
+        $id = $_GET['id'];
+        $data1= $this->model->SelectUnidad();
+        $data2 = $this->model->SelectDespacho($id);
+    $this->views->getView($this, "Editar", "", $data1, $data2);
+    }
+
+    //Actualiza los datos de un Usuario
+    public function actualizar()
+    {
+        $id = $_POST['id'];
+        if (isset($_POST['negadas'])) {
+            $negadas = 1;
+        } else {
+            $negadas = 0;
+        }
+        $unidad = limpiarInput($_POST['unidad']);
+        $remision = limpiarInput($_POST['remision']);
+        $entrega = limpiarInput($_POST['entrega']);
+        $eco = limpiarInput($_POST['eco']);
+        $actualizar = $this->model->actualizarDespacho($unidad, $negadas, $remision, $entrega, $eco, $id);     
+            if ($actualizar == 1) {
+                $alert = 'modificado';
+            } else {
+                $alert =  'error';
+            }
+        header("location: " . base_url() . "Despachos/Listar?msg=$alert");
+        die();
+    }
+
+    //Aquí se debe llamar igual que la vista
+    public function Listar()
+    {
+        $data1= $this->model->SelectUnidad();
+        $data2= $this->model->Despachos();
+        $this->views->getView($this, "Listar", "", $data1, $data2);
     }
 
     // Muestra la vista "Registro" con los datos obtenidos de los modelos.
     public function eliminar() {
         $id = $_GET['id'];
         $this->model->eliminar($id);
-        header("location: " . base_url() . "Inicio/Home");
+        $alert = "eliminado";
+        header("location: " . base_url() . "Despachos/Listar?msg=$alert");
     }
 
     public function agregar() {
@@ -69,7 +108,7 @@ class Despachos extends Controllers //Aquí se debe llamas igual que el archivo
         } else {
             $alert =  'noformato3';
         }
-        header("location: " . base_url() . "Despachos/Registro?msg=$alert");
+        header("location: " . base_url() . "Despachos/Listar?msg=$alert");
         die();
     }
 }

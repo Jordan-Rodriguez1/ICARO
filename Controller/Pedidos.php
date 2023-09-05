@@ -61,6 +61,15 @@ class Pedidos extends Controllers //Aquí se debe llamas igual que el archivo
         die();
     }
 
+    public function desenlazar()
+    {
+        $id = $_POST['idd'];
+        $monto2 = 0;        
+        $insert = $this->model->Desenlazar($monto2, $id);        
+        header("location: " . base_url() . "Pedidos/Compras");
+        die();   
+    }
+
     public function insertar()
     {
         $nombre = $_POST['nombre'];

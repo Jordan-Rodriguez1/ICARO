@@ -30,13 +30,13 @@
               if ($arc['intento'] == 0) {?>
                 <a href="<?php echo base_url(); ?>Assets/Documentos/Peticiones/<?php echo $arc['nombre']; ?>" target="_blank" 
                 <?php if (strstr($arc['nombre'], ".") == ".xlsx") {?>
-                  class='btn-sm app-btn-primary mb-2'><?php echo $arc['nombre']; ?></a>
+                  class='btn-sm app-btn-primary mb-2'><?php echo $arc['nombre']; ?></a>&nbsp
                 <?php } elseif (strstr($arc['nombre'], ".") == ".zip") { ?>
-                  class='btn-sm app-btn-secondary mb-2'><?php echo $arc['nombre']; ?></a>
+                  class='btn-sm app-btn-secondary mb-2'><?php echo $arc['nombre']; ?></a>&nbsp
                 <?php } elseif (strstr($arc['nombre'], ".") == ".pdf") { ?>
-                  class='btn-sm btn-danger mb-2'><?php echo $arc['nombre']; ?></a>
+                  class='btn-sm btn-danger mb-2'><?php echo $arc['nombre']; ?></a>&nbsp
                 <?php } elseif (strstr($arc['nombre'], ".") == ".docx") { ?>
-                  class='btn-sm btn-info mb-2'><?php echo $arc['nombre']; ?></a>
+                  class='btn-sm btn-info mb-2'><?php echo $arc['nombre']; ?></a>&nbsp
                 <?php }?>
               <?php }
             } ?>
@@ -73,13 +73,13 @@
                             if ($arcv['intento'] == $validar['intento']) {?>
                               <a href="<?php echo base_url(); ?>Assets/Documentos/Foro/<?php echo $arcv['nombre']; ?>" target="_blank" 
                               <?php if (strstr($arcv['nombre'], ".") == ".xlsx") {?>
-                                class='btn-sm app-btn-primary mb-2'><?php echo $arcv['nombre']; ?></a>
+                                class='btn-sm app-btn-primary mb-2'><?php echo $arcv['nombre']; ?></a>&nbsp
                               <?php } elseif (strstr($arcv['nombre'], ".") == ".zip") { ?>
-                                class='btn-sm app-btn-secondary mb-2'><?php echo $arcv['nombre']; ?></a>
+                                class='btn-sm app-btn-secondary mb-2'><?php echo $arcv['nombre']; ?></a>&nbsp
                               <?php } elseif (strstr($arcv['nombre'], ".") == ".pdf") { ?>
-                                class='btn-sm btn-danger mb-2'><?php echo $arcv['nombre']; ?></a>
+                                class='btn-sm btn-danger mb-2'><?php echo $arcv['nombre']; ?></a>&nbsp
                               <?php } elseif (strstr($arcv['nombre'], ".") == ".docx") { ?>
-                                class='btn-sm btn-info mb-2'><?php echo $arcv['nombre']; ?></a>
+                                class='btn-sm btn-info mb-2'><?php echo $arcv['nombre']; ?></a>&nbsp
                               <?php }
                             }
                           } ?>

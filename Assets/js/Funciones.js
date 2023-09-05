@@ -152,7 +152,9 @@ $(document).ready(function () {
     fila = $(this).closest("tr");
     id = parseInt(fila.find("td:eq(0)").text()); //capturo el ID
     contrato = fila.find("td:eq(1)").text();
-    monto = fila.find("td:eq(7)").text();
+    monto = fila.find("td:eq(6)").text();
+    // Remover el signo "$" y las comas
+    monto = monto.replace("$", "").replace(/,/g, "");
     input = document.getElementById("monto2");
     input.max = monto;
     $("#id").val(id);
@@ -161,11 +163,44 @@ $(document).ready(function () {
     $("#VentanaModalP").modal("show");
   });
 
+  //desenlazar
+  $(document).on("click", ".des", function () {
+    fila = $(this).closest("tr");
+    id = parseInt(fila.find("td:eq(0)").text()); //capturo el ID
+    contrato = fila.find("td:eq(1)").text();
+    monto = fila.find("td:eq(6)").text();
+    // Remover el signo "$" y las comas
+    monto = monto.replace("$", "").replace(/,/g, "");
+    input = document.getElementById("monto2");
+    input.max = monto;
+    $("#idd").val(id);
+    $("#contratod").val(contrato);
+    $("#VentanaModalD").modal("show");
+  });
+
   //Mensaje de alerta al inactivar algo
   $(".elim").submit(function (e) {
     e.preventDefault();
     Swal.fire({
       title: "¿Está seguro de ponerlo como inactivo?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#28a745",
+      cancelButtonColor: "#dc3545",
+      confirmButtonText: "Si",
+      cancelButtonText: "No",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.submit();
+      }
+    });
+  });
+
+  //Mensaje de alerta al desenlazar algo
+  $(".desenlazar").submit(function (e) {
+    e.preventDefault();
+    Swal.fire({
+      title: "¿Está seguro de desenlazar el registro?",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#28a745",
@@ -233,23 +268,23 @@ $(document).ready(function () {
     });
   });
 
-    //Mensaje de alerta al no formalizar
-    $(".noforma").submit(function (e) {
-      e.preventDefault();
-      Swal.fire({
-        title: "¿Está seguro de No Formalizar el Instrumento?",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#28a745",
-        cancelButtonColor: "#dc3545",
-        confirmButtonText: "Si",
-        cancelButtonText: "No",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          this.submit();
-        }
-      });
+  //Mensaje de alerta al no formalizar
+  $(".noforma").submit(function (e) {
+    e.preventDefault();
+    Swal.fire({
+      title: "¿Está seguro de No Formalizar el Instrumento?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#28a745",
+      cancelButtonColor: "#dc3545",
+      confirmButtonText: "Si",
+      cancelButtonText: "No",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.submit();
+      }
     });
+  });
 
   //Mensaje de alerta al validar
   $(".validar").submit(function (e) {
@@ -329,8 +364,8 @@ $(document).ready(function () {
     }).then((result) => {
       if (result.isConfirmed) {
         this.submit();
-      var contenedor = document.getElementById("pantalla-carga");
-      contenedor.style.visibility = "visible";
+        var contenedor = document.getElementById("pantalla-carga");
+        contenedor.style.visibility = "visible";
       }
     });
   });

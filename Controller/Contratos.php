@@ -23,7 +23,8 @@
             $data2 = $this->model->SelectTipo();
             $data3 = $this->model->SelectPlataforma();
             $data4 = $this->model->usuario();
-            $this->views->getView($this, "Registro", "", $data1, $data2, $data3, $data4);
+            $data5 = $this->model->selectRegimen();
+            $this->views->getView($this, "Registro", "", $data1, $data2, $data3, $data4, $data5);
         }
 
         // Muestra la vista "Registro" con los datos obtenidos de los modelos.
@@ -35,7 +36,8 @@
             $data4 = $this->model->usuario();
             $data5 = $this->model->cont($contrato);
             $data6 = $this->model->contd($contrato);
-            $this->views->getView($this, "Editar", "", $data1, $data2, $data3, $data4, $data5, $data6);
+            $data7 = $this->model->selectRegimen();
+            $this->views->getView($this, "Editar", "", $data1, $data2, $data3, $data4, $data5, $data6, $data7);
         }
 
         // Muestra la vista "Registro" con los datos obtenidos de los modelos.
@@ -103,6 +105,61 @@
         }
 
         // Agrega un nuevo contrato a la base de datos con los datos proporcionados mediante el formulario.
+        public function agregarmuchos() {
+        $name = pathinfo($_FILES["archivo"]["name"]);
+        $tipo_archivo = $_FILES["archivo"]["type"];
+        $tamano_archivo = $_FILES["archivo"]["size"];
+        $ruta_temporal = $_FILES["archivo"]["tmp_name"];
+        $tmaximo = 20 * 1024 * 1024;
+        if(($tamano_archivo < $tmaximo && $tamano_archivo != 0) && ($name["extension"] == "csv")){
+            $gestor = fopen($ruta_temporal, 'r');
+            while (($fila = fgetcsv($gestor, 1000, ',')) !== false) {
+                $fila2 = array_slice($fila, 0, 46);
+                $data[] = $fila2;
+            }
+            $a = 0; //Agregados
+            $e = 0; //Error
+            $x = 0; //Ya existen
+            array_splice($data, 0, 1);
+            foreach ($data as $datos) {
+                $contrato = $datos[0]??'';//A
+                $descripcion = $datos[1]??'';//B
+                $area = $datos[2]??'';//C
+                $categoria = $datos[3]??'';//D
+                $tipo = $datos[4]??'';//E
+                $termino = $datos[5]??'';//F
+                $maximo = $datos[6]??'';//G
+                $fianza = $datos[7]??'';//H
+                $plataforma = $datos[8]??'';//I
+                $proveedor = $datos[9]??'';//J
+                $cuenta = $datos[10]??'';//K
+                $regimen = $datos[11]??'';//L
+                $inicio = $datos[12]??'';//M
+                $requiriente = 0;
+                $administrador = 0;
+                $devengo = 0;
+                $fecha_termina = date("Y-m-d", strtotime("+1 year"));
+
+                if ($contrato != "" && $contrato != NULL){
+                    $insert = $this->model->agregarContrato($contrato, $descripcion, $area, $requiriente, $administrador, $tipo, $termino, $maximo, $fianza, $plataforma, $fecha_termina, $devengo, $categoria);
+                    $ingresar = $this->model->agregarContratod($contrato, $inicio, $regimen, $proveedor, $cuenta);
+                    $estado = 4;
+                    $actualizar = $this->model->actualizaEstado($estado, $contrato);
+                    $a++;
+                } else{
+                    $e++;
+                }
+            }
+            $alert = "cargado";
+            header("location: " . base_url() . "Contratos/Registro?msg=$alert&a=$a&e=$e&x=$x");
+        }else{
+            $alert = "error";
+            header("location: " . base_url() . "Contratos/Registro?msg=$alert");
+        }
+        die();  
+    }
+
+        // Agrega un nuevo contrato a la base de datos con los datos proporcionados mediante el formulario.
         public function editarc() {
             if (isset($_POST['contrato'])) {
                 $categoria = "Contrato";
@@ -130,7 +187,7 @@
 
             $contratodetalle = $this->model->contd($numero);
 
-            $insert = $this->model->acttualizarContrato($numero, $descripcion, $area, $requiriente, $administrador, $tipo, $termino, $maximo, $fianza, $plataforma, $fecha_termina, $devengo, $categoria);
+            $insert = $this->model->acttualizarContrato($numero, $descripcion, $area, $requiriente, $tipo, $termino, $maximo, $fianza, $plataforma, $fecha_termina, $devengo, $categoria);
              if ($insert > 0) {
                 //Agrega los valores restantes
                 if ($contratodetalle != null) {
@@ -271,7 +328,8 @@
             $data2 = $this->model->datos_foro($contrato);
             $data3 = $this->model->archivos_foro($contrato);
             $data4 = $this->model->detalleContrato($contrato);
-            $this->views->getView($this, "Foro", "", $data1, $data2, $data3, $data4);
+            $data5 = $this->model->detalleContratoD($contrato);
+            $this->views->getView($this, "Foro", "", $data1, $data2, $data3, $data4, $data5);
         }
 
         // Añade un comentario en el foro
@@ -343,11 +401,23 @@
             die();
         }
 
+        public function expediente(){ 
+            $number = limpiarInput($_POST['id']);
+            $expediente = limpiarInput($_POST['expediente']);
+            $folio = "S/D";
+            $agregar = $this->model->AgregarExpediente($number, $expediente, $folio);
+            header("location: " . base_url() . "Contratos/Foro?contrato=$number");
+            die();
+        }
+
+
         public function validar(){ 
             $number = limpiarInput($_GET['contrato']);
             $fecha_valida=$_POST['fecha_valida'];
             $estado = 3;
             $actualizar = $this->model->actualizaEstado($estado, $number, $fecha_valida);
+            $folio = limpiarInput($_POST['folio']);
+            $AgregarFolio = $this->model->actualizaFolio($folio, $number);
 
             $cont = $this->model->selectReq($number);
             $data = $this->model->selectUsuario($cont['id_creador']);

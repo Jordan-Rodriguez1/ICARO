@@ -32,12 +32,22 @@ class DespachosModel extends Mysql{ //El archivo se debe llamar igual que el con
         }
         return $return;
     }
+
     public function SelectUnidad()
     {
         $sql = "SELECT * FROM unidades";
         $res = $this->select_all($sql);
         return $res;
     }
+
+    public function SelectDespacho(string $id)
+    {
+        $this->id = $id;
+        $sql = "SELECT * FROM despachos WHERE id = '{$this->id}'";
+        $res = $this->select($sql);
+        return $res;
+    }
+
     public function agregar_pdf(string $remision, string $archivo)
     {
         $return = "";
@@ -61,6 +71,31 @@ class DespachosModel extends Mysql{ //El archivo se debe llamar igual que el con
         $return = $resul;
         return $return;
     }
+
+    public function despachos(){     
+        $sql = "SELECT despachos.*, unidades.abreviacion FROM despachos, unidades WHERE despachos.unidad = unidades.id";
+        $res = $this->select_all($sql);
+            return $res;
+    }
+
+    //Edita los datos de un usuario
+    public function actualizarDespacho(string $unidad,int $negadas,string $remision,string $entrega, string $eco, string $id)
+    {
+        $return = "";
+        $this->unidad = $unidad;
+        $this->negadas = $negadas;
+        $this->remision = $remision;
+        $this->entrega = $entrega;
+        $this->eco = $eco;    
+        $this->id = $id;   
+
+        $query = "UPDATE despachos SET unidad=?, negadas=?, remision=?, fecha_entrega=?, eco=? WHERE id=?";
+        $data = array($this->unidad, $this->negadas, $this->remision, $this->entrega, $this->eco, $this->id);
+        $resul = $this->update($query, $data);
+        $return = $resul;
+        return $return;
+    }
+
 }
 
 
