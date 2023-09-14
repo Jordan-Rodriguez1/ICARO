@@ -78,6 +78,7 @@
             $regimen = limpiarInput($_POST['regimen']);
             $proveedor = limpiarInput($_POST['proveedor']);
             $cuenta = limpiarInput($_POST['cuenta']);
+            $expediente = limpiarInput($_POST['expediente']);
 
             $insert = $this->model->agregarContrato($numero, $descripcion, $area, $requiriente, $administrador, $tipo, $termino, $maximo, $fianza, $plataforma, $fecha_termina, $devengo, $categoria);
             if ($insert == 'existe') {
@@ -85,7 +86,7 @@
                 header("location: " . base_url() . "Contratos/Registro?msg=$alert");
             } else if ($insert > 0) {
                 //Agrega los valores restantes
-                $insert = $this->model->agregarContratod($numero, $inicio, $regimen, $proveedor, $cuenta);
+                $insert = $this->model->agregarContratod($numero, $inicio, $regimen, $proveedor, $cuenta, $expediente);
                 //Si se agrega te redirige a la vista "General" con un mensaje de alerta.
                 $data = $this->model->selectUsuario($requiriente);
                 $asunto = 'Creacion de Contrato';
@@ -135,14 +136,21 @@
                 $cuenta = $datos[10]??'';//K
                 $regimen = $datos[11]??'';//L
                 $inicio = $datos[12]??'';//M
+                $expediente = $datos[13]??'';//N
                 $requiriente = 0;
                 $administrador = 0;
                 $devengo = 0;
                 $fecha_termina = date("Y-m-d", strtotime("+1 year"));
 
+                $termino = defaultdate($termino);
+                $inicio = defaultdate($inicio);
+                $maximo = defaultint($maximo);
+                $cuenta = defaultint($cuenta);
+                
+
                 if ($contrato != "" && $contrato != NULL){
                     $insert = $this->model->agregarContrato($contrato, $descripcion, $area, $requiriente, $administrador, $tipo, $termino, $maximo, $fianza, $plataforma, $fecha_termina, $devengo, $categoria);
-                    $ingresar = $this->model->agregarContratod($contrato, $inicio, $regimen, $proveedor, $cuenta);
+                    $ingresar = $this->model->agregarContratod($contrato, $inicio, $regimen, $proveedor, $cuenta, $expediente);
                     $estado = 4;
                     $actualizar = $this->model->actualizaEstado($estado, $contrato);
                     $a++;
@@ -184,6 +192,7 @@
             $regimen = limpiarInput($_POST['regimen']);
             $proveedor = limpiarInput($_POST['proveedor']);
             $cuenta = limpiarInput($_POST['cuenta']);
+            $expediente = limpiarInput($_POST['expediente']);
 
             $contratodetalle = $this->model->contd($numero);
 
@@ -191,9 +200,9 @@
              if ($insert > 0) {
                 //Agrega los valores restantes
                 if ($contratodetalle != null) {
-                    $insert = $this->model->acttualizarContratod($numero, $inicio, $regimen, $proveedor, $cuenta);
+                    $insert = $this->model->acttualizarContratod($numero, $inicio, $regimen, $proveedor, $cuenta, $expediente);
                 } else {
-                    $insert = $this->model->agregarContratod($numero, $inicio, $regimen, $proveedor, $cuenta);
+                    $insert = $this->model->agregarContratod($numero, $inicio, $regimen, $proveedor, $cuenta, $expediente);
                 }
 
                 //Si se agrega te redirige a la vista "General" con un mensaje de alerta.
@@ -250,7 +259,8 @@
             $data2 =$this->model->selectExternoJ();
             $data3 =$this->model->selectContratosEdo1();
             $data4 =$this->model->selectInternoJ();
-            $this->views->getView($this, "Validando", "", $data1, $data2, $data3, $data4);
+            $data5 =$this->model->folio();
+            $this->views->getView($this, "Validando", "", $data1, $data2, $data3, $data4, $data5);
         }
 
         // Agrega contrato a validación

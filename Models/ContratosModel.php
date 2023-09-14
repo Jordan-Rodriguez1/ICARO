@@ -131,16 +131,17 @@
         }
 
         // Agrega un nuevo contrato a la base de datos. Datos adicionales
-        public function agregarContratod(string $numero, string $inicio, string $regimen, string $proveedor, string $cuenta) {
+        public function agregarContratod(string $numero, string $inicio, string $regimen, string $proveedor, string $cuenta, string $expediente) {
             $return = "";
             $this->numero = $numero;
             $this->inicio = $inicio;
             $this->regimen = $regimen;
             $this->proveedor = $proveedor;
             $this->cuenta = $cuenta;
+            $this->expediente = $expediente;
 
-            $query = "INSERT INTO contratosd(numero, inicio, regimen, proveedor, cuenta) VALUES (?,?,?,?,?)";
-            $data = array($this->numero, $this->inicio, $this->regimen,$this->proveedor, $this->cuenta);
+            $query = "INSERT INTO contratosd(numero, inicio, regimen, proveedor, cuenta, compranet) VALUES (?,?,?,?,?,?)";
+            $data = array($this->numero, $this->inicio, $this->regimen,$this->proveedor, $this->cuenta, $this->expediente);
             $resul = $this->insert($query, $data);
             $return = $resul;
         }
@@ -170,16 +171,17 @@
         }
 
         // Agrega un nuevo contrato a la base de datos. Datos adicionales
-        public function acttualizarContratod(string $numero, string $inicio, string $regimen, string $proveedor, string $cuenta) {
+        public function acttualizarContratod(string $numero, string $inicio, string $regimen, string $proveedor, string $cuenta, string $expediente) {
             $return = "";
             $this->numero = $numero;
             $this->inicio = $inicio;
             $this->regimen = $regimen;
             $this->proveedor = $proveedor;
             $this->cuenta = $cuenta;
+            $this->expediente = $expediente;
 
-            $query = "UPDATE contratosd SET contratosd.inicio = ?, contratosd.regimen = ?, contratosd.proveedor = ?, contratosd.cuenta = ? WHERE numero=?";       
-            $data = array($this->inicio, $this->regimen,$this->proveedor, $this->cuenta, $this->numero);
+            $query = "UPDATE contratosd SET contratosd.inicio = ?, contratosd.regimen = ?, contratosd.proveedor = ?, contratosd.cuenta = ?, contratosd.compranet = ?  WHERE numero=?";       
+            $data = array($this->inicio, $this->regimen,$this->proveedor, $this->cuenta, $this->expediente, $this->numero);
             $resul = $this->update($query, $data);
             $return = $resul;
 
@@ -272,6 +274,13 @@
         // Selecciona todos los usuarios externos juridicos
         public function selectExternoJ() {
             $sql = "SELECT * FROM usuarios WHERE rol = 3";
+            $res = $this->select_all($sql);
+            return $res;
+        }
+
+        // Selecciona todos los usuarios externos juridicos
+        public function folio() {
+            $sql = "SELECT * FROM validar_contd";
             $res = $this->select_all($sql);
             return $res;
         }

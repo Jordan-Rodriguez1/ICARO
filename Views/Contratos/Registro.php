@@ -45,6 +45,10 @@
 									    </div>
                     </div>
                     <div class="mb-3">
+                      <label for="numero" class="form-label" style="color:#000000;">Número de Expediente Compranet</label>
+                      <input type="text" class="form-control" id="expediente" name="expediente" value="" required>
+                    </div>
+                    <div class="mb-3">
                       <label for="descripcion" class="form-label" style="color:#000000;">Descripción del Contrato</label>
                       <textarea class="form-control" name="descripcion" id="descripcion" cols="auto" rows="auto" required></textarea>
                     </div>

@@ -172,7 +172,7 @@ class Inicio extends Controllers
         // Verificar si se pudo abrir el archivo
         if ($archivo) {
             // Escribir los encabezados de las columnas
-            $encabezados = array('No Contrato', 'Descripcion', 'Area', 'Categoria', 'Tipo', 'Termino', 'Maximo', 'Fianza', 'Plataforma', 'Proveedor', 'Cuenta', 'Regimen', 'Inicio', 'Fecha');
+            $encabezados = array('No Contrato', 'Número de Expediente Compranet', 'Descripcion', 'Area', 'Categoria', 'Tipo', 'Termino', 'Maximo', 'Fianza', 'Plataforma', 'Proveedor', 'Cuenta', 'Regimen', 'Inicio', 'Expediente', 'Folio', 'Fecha');
             fputcsv($archivo, $encabezados);
 
             foreach ($data as $campos) {

@@ -235,7 +235,10 @@ class InicioModel extends Mysql{
     //Seleccionar el tipo de contratacion
     public function contratos()
     {
-        $sql = "SELECT contratos.numero, contratos.descripcion, contratos.area, contratos.categoria, contratos.tipo, contratos.termino, contratos.maximo, contratos.fianza, contratos.plataforma, contratosd.proveedor, contratosd.cuenta, contratosd.regimen, contratosd.inicio, contratos.fecha FROM contratos JOIN contratosd ON contratos.numero = contratosd.numero;";
+        $sql = "SELECT contratos.numero, contratosd.compranet, contratos.descripcion, contratos.area, contratos.categoria, contratos.tipo, contratos.termino, contratos.maximo, contratos.fianza, contratos.plataforma, contratosd.proveedor, contratosd.cuenta, contratosd.regimen, contratosd.inicio, validar_contd.expediente, validar_contd.folio, contratos.fecha 
+        FROM contratos 
+        LEFT JOIN contratosd ON contratos.numero = contratosd.numero
+		LEFT JOIN validar_contd ON contratos.numero = validar_contd.id_Contrato;";
         $res = $this->select_all($sql);
         return $res;
     }

@@ -129,6 +129,31 @@ function decimales($dato) {
     return $dato;
 }
 
+//FORMATO DEFHA POR DEFAULT
+function defaultdate($dato) {
+    if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $dato)) {
+        return $dato;
+    } else {
+        $dato = '1000-10-10';
+        return $dato;
+    }
+    
+}
+
+//FORMATO DEFHA POR INT
+function defaultint($dato) {
+    if ($dato == '' || $dato == null) {
+        $dato = 0;
+    }
+    if (is_numeric($dato)) {
+        return $dato;
+    } else {
+        $dato = 0;
+        return $dato;
+    }
+    
+}
+
 // Utilizar los espacios de nombres necesarios
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;

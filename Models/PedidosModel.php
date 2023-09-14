@@ -30,6 +30,14 @@ class PedidosModel extends Mysql{ //El archivo se debe llamar igual que el contr
         return $res;
     }
 
+    //Se pueden hacer 5 tipo de consultas
+    public function totalContratado()
+    {
+        $sql = "SELECT SUM(Monto) AS total FROM pedidos;";
+        $res = $this->select($sql); //select_all es para seleccionar cuando el resultado puede arrojar muchas filas
+        return $res;
+    }
+
     public function eliminarchivo(string $fecha)
     {
         $return = "";        

@@ -51,6 +51,8 @@
                         <th scope="col">Fecha de creacion</th>
                         <th scope="col">Responsable</th>
                         <th scope="col">Validador</th>                
+                        <th scope="col">Expediente</th>
+                        <th scope="col">Folio</th>
                         <th scope="col">No. Intentos</th>
                         <th scope="col">Foro</th>
 			  					    </tr>
@@ -78,6 +80,17 @@
                           <td><?php echo $validar['fecha']; ?></td>
                           <td><?php echo $validar['creador']; ?></td>
                           <td><?php echo $validar['validador']; ?></td>
+                          <?php foreach ($data5 as $folio) {if ($folio['id_contrato'] == $validar['id_contrato']) {?>
+                            <td><?php echo $folio['expediente']; ?></td>
+                            <td><?php echo $folio['folio']; ?></td>
+                          <?php } else { ?>
+                            <td>S/D</td>
+                            <td>S/D</td>
+                          <?php } }?>
+                          <?php if ($data5 == null) { ?>
+                            <td>S/D</td>
+                            <td>S/D</td>
+                          <?php } ?>
                           <td><?php echo $validar['intentos'];?></td>
                           <?php if ($validar['estado'] != 1) { ?>
                             <td><a href="<?php echo base_url(); ?>Contratos/Foro?contrato=<?php echo $validar['id_contrato']; ?>">
@@ -108,7 +121,9 @@
                         <th scope="col">Contrato</th>
                         <th scope="col">Fecha de creacion</th>
                         <th scope="col">Responsable</th>
-                        <th scope="col">Validador</th>                 
+                        <th scope="col">Validador</th>  
+                        <th scope="col">Expediente</th>
+                        <th scope="col">Folio</th>
                         <th scope="col">No. Intentos</th>
                         <th scope="col">Foro</th>
 			  					    </tr>
@@ -136,6 +151,17 @@
                           <td><?php echo $validar['fecha']; ?></td>
                           <td><?php echo $validar['creador']; ?></td>
                           <td><?php echo $validar['validador']; ?></td>
+                          <?php foreach ($data5 as $folio) {if ($folio['id_contrato'] == $validar['id_contrato']) {?>
+                            <td><?php echo $folio['expediente']; ?></td>
+                            <td><?php echo $folio['folio']; ?></td>
+                          <?php } else { ?>
+                            <td>S/D</td>
+                            <td>S/D</td>
+                          <?php } }?>
+                          <?php if ($data5 == null) { ?>
+                            <td>S/D</td>
+                            <td>S/D</td>
+                          <?php } ?>
                           <td><?php echo $validar['intentos'];?></td>
                           <td><a href="<?php echo base_url(); ?>Contratos/Foro?contrato=<?php echo $validar['id_contrato']; ?>">
                             <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-up-right-square mr-2" fill="green" xmlns="http://www.w3.org/2000/svg">

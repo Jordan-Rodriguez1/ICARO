@@ -72,14 +72,14 @@ $total_pedi2=0;
 $total_contratado=0;
 $total_entregado= $data4['suma_montos'];
 $total_enlazado= 0;
+$total_contratado = $data5['total'];
 
 
 
 foreach ($data1 as $pedi2){
   $total_pedi2=$total_pedi2+$pedi2['cantidad'];
-  $total_contratado=$total_contratado+$pedi2['monto'];
   if($pedi2['monto2']!=0){
-    $total_enlazado=$total_enlazado+$pedi2['monto'];
+    $total_enlazado=$total_enlazado+$pedi2['monto2'];
   }
   if($pedi2['tipo']=="010" || $pedi2['tipo']=="020" || $pedi2['tipo']=="030" || $pedi2['tipo']=="040"){
   $final=$final+$pedi2['cantidad'];

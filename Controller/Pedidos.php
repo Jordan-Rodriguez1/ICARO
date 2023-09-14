@@ -18,8 +18,9 @@ class Pedidos extends Controllers //Aquí se debe llamas igual que el archivo
         $data2 = $this->model->SelectFecha();
         $data3 = $this->model->totalPedidos();
         $data4 = $this->model->totalEntregado();
+        $data5 = $this->model->totalContratado();
         
-    $this->views->getView($this, "Compras", "", $data1, $data2, $data3, $data4);
+    $this->views->getView($this, "Compras", "", $data1, $data2, $data3, $data4, $data5);
     }
 
     public function Pagado(){

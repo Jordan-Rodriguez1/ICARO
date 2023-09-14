@@ -9,8 +9,7 @@
           <a href="<?php echo base_url(); ?>Contrataciones/Validando">
             <i class="fas fa-arrow-left"></i> Volver
           </a>
-        </div>
-      
+        </div> 
         <div class='app-card shadow-sm h-100' style='margin-top:20px !important;'>
           <div class='app-card-body p-3 p-lg-4'>
             <div>
