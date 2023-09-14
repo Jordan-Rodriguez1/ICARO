@@ -263,10 +263,13 @@
         //VISTA VALIDANDO
         // Selecciona todos los contratos de la base de datos.
         public function selectContratosVal() {
-            $sql = "SELECT validar_cont.*, validar_cont.id_validador AS validador, validar_cont.id_creador AS creador, validar_cont.id_contrato AS estado, u1.nombre as creador, u2.nombre as validador, c1.estado as estado FROM validar_cont
+            $sql = "SELECT validar_cont.*, validar_cont.id_validador AS validador, validar_cont.id_creador AS creador, validar_cont.id_contrato AS estado,
+                    u1.nombre AS creador, u2.nombre AS validador, c1.estado AS estado, COALESCE(vc.folio, 'S/D') AS folio, COALESCE(vc.expediente, 'S/D') AS expediente
+                    FROM validar_cont
                     JOIN usuarios u1 ON validar_cont.id_creador = u1.id
                     JOIN contratos c1 ON validar_cont.id_contrato = c1.numero
-                    JOIN usuarios u2 ON validar_cont.id_validador = u2.id";
+                    JOIN usuarios u2 ON validar_cont.id_validador = u2.id
+                    LEFT JOIN validar_contd vc ON validar_cont.id = vc.id_contrato;";
             $res = $this->select_all($sql);
             return $res;
         }

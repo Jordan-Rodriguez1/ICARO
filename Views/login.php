@@ -58,7 +58,7 @@
   			    	</div><!--//auth-body-->
 			    	<footer class="app-auth-footer">
 					    <div class="container text-center py-3">
-			    	    	<small class="copyright">Diseño y Desarrollo por la Coordinación de Abastecimiento y Equipamiento del OOADR del IMSS en colima. V 1.3.0</small>
+			    	    	<small class="copyright">Diseño y Desarrollo por la Coordinación de Abastecimiento y Equipamiento del OOADR del IMSS en colima. V 1.3.1</small>
 					    </div>
 			    	</footer><!--//app-auth-footer-->	
   		   	 	</div><!--//flex-column-->   

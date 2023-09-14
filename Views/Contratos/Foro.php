@@ -1,4 +1,4 @@
-<?php if($_SESSION['rol'] == 7 || $_SESSION['rol'] == 5 || $data1['id_creador'] == $_SESSION['id'] || $data1['id_validador'] == $_SESSION['id']){ ?> <!-- Si es Admin, Jefatura, Interno Juridico (ASIGNADO) o Externo Juridico (ASIGNADO)-->
+<?php if($_SESSION['rol'] == 7 || $_SESSION['rol'] == 5 || $data1['id_creador'] == $_SESSION['id'] || $_SESSION['rol'] == 3){ ?> <!-- Si es Admin, Jefatura, Interno Juridico (ASIGNADO) o Externo Juridico (TODOS)-->
   <?php encabezado() ?> <!-- Poner el header -->
 
   <div class="app-wrapper">
@@ -19,6 +19,8 @@
                   <span class="badge bg-success">Validado</span>
                 <?php } elseif ($data4['estado'] == 4) { ?>
                   <span class="badge bg-success">Formalizado</span>
+                <?php } elseif ($data4['estado'] == 6) { ?>
+                  <span class="badge bg-success">En Firma</span>
                 <?php } elseif ($data4['estado'] == 5) { ?>
                   <span class="badge bg-danger">No Formalizado</span>
                 <?php }?>
@@ -99,9 +101,13 @@
             <?php if ($_SESSION['rol'] == 3) {?>
               <button class="btn app-btn-primary mb-2" type="button" data-toggle="modal" data-target="#modal2">Validar</button>
             <?php }
-          } elseif ($_SESSION['rol'] == 7 && ($data4['estado'] <= 3)) { ?>
+          } elseif ($_SESSION['rol'] == 7 && ($data4['estado'] == 6)) { ?>
             <form action="<?php echo base_url() ?>Contratos/formalizar?contrato=<?php echo $data1['id_contrato']; ?>" method="post" class="d-inline forma">
               <button title="Formalizar" type="submit" class="btn app-btn-primary mb-2">Formalizar</button>
+            </form>
+          <?php } elseif ($_SESSION['rol'] == 7 && ($data4['estado'] == 3)) { ?>
+            <form action="<?php echo base_url() ?>Contratos/enfirma?contrato=<?php echo $data1['id_contrato']; ?>" method="post" class="d-inline firma">
+              <button title="Formalizar" type="submit" class="btn app-btn-primary mb-2">En Fimra</button>
             </form>
           <?php } ?>
         </div><!--//col--> 

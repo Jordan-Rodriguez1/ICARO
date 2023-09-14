@@ -105,6 +105,15 @@
             die();
         }
 
+        public function fecha() {
+            // Ejemplo de uso:
+            $fecha = '31/02/2023';
+            $fechaConvertida = defaultdate($fecha);
+            echo $fechaConvertida; // Esto mostrará '2023-09-25'
+        }
+
+
+
         // Agrega un nuevo contrato a la base de datos con los datos proporcionados mediante el formulario.
         public function agregarmuchos() {
         $name = pathinfo($_FILES["archivo"]["name"]);
@@ -146,11 +155,20 @@
                 $inicio = defaultdate($inicio);
                 $maximo = defaultint($maximo);
                 $cuenta = defaultint($cuenta);
-                
 
                 if ($contrato != "" && $contrato != NULL){
                     $insert = $this->model->agregarContrato($contrato, $descripcion, $area, $requiriente, $administrador, $tipo, $termino, $maximo, $fianza, $plataforma, $fecha_termina, $devengo, $categoria);
-                    $ingresar = $this->model->agregarContratod($contrato, $inicio, $regimen, $proveedor, $cuenta, $expediente);
+                    if ($insert == 'existe') {
+                        $insert = $this->model->acttualizarContrato($contrato, $descripcion, $area, $requiriente, $tipo, $termino, $maximo, $fianza, $plataforma, $fecha_termina, $devengo, $categoria);
+                        $contratodetalle = $this->model->contd($contrato);
+                        if ($contratodetalle != null) {
+                            $insert = $this->model->acttualizarContratod($contrato, $inicio, $regimen, $proveedor, $cuenta, $expediente);
+                        } else {
+                            $insert = $this->model->agregarContratod($contrato, $inicio, $regimen, $proveedor, $cuenta, $expediente);
+                        }
+                    } else {
+                        $ingresar = $this->model->agregarContratod($contrato, $inicio, $regimen, $proveedor, $cuenta, $expediente);
+                    }
                     $estado = 4;
                     $actualizar = $this->model->actualizaEstado($estado, $contrato);
                     $a++;
@@ -259,8 +277,7 @@
             $data2 =$this->model->selectExternoJ();
             $data3 =$this->model->selectContratosEdo1();
             $data4 =$this->model->selectInternoJ();
-            $data5 =$this->model->folio();
-            $this->views->getView($this, "Validando", "", $data1, $data2, $data3, $data4, $data5);
+            $this->views->getView($this, "Validando", "", $data1, $data2, $data3, $data4);
         }
 
         // Agrega contrato a validación
@@ -481,6 +498,33 @@
             $correo = $data['correo'];
             $nombre = $data['nombre'];
             $msg = $_SESSION['nombre'].' ha formalizado el contrato '.$numero.'. en el que estás como requiriente.';
+            correo($msg, $asunto, $correo, $nombre);
+            $noti = $this->model->notifica($asunto, $msg, $cont['requiriente']);
+
+            header("location: " . base_url() . "Contratos/Foro?contrato=$number");
+            die();
+        }
+
+        public function enfirma(){
+            $number = limpiarInput($_GET['contrato']);
+            $estado = 6;
+            $actualizar = $this->model->actualizaEstado($estado, $number);
+
+            $cont = $this->model->selectReq($number);
+            $data = $this->model->selectUsuario($cont['id_creador']);
+            $asunto = 'Validacion de Contrato';
+            $correo = $data['correo'];
+            $nombre = $data['nombre'];
+            $msg = $_SESSION['nombre'].' ha puesto el contrato '.$numero.' En Firma. en el que estás como administrador.';
+            correo($msg, $asunto, $correo, $nombre);
+            $noti = $noti = $this->model->notifica($asunto, $msg, $cont['id_creador']);
+
+            $cont = $this->model->cont($number);
+            $data = $this->model->selectUsuario($cont['requiriente']);
+            $asunto = 'Validacion de Contrato';
+            $correo = $data['correo'];
+            $nombre = $data['nombre'];
+            $msg = $_SESSION['nombre'].' ha formalizado el contrato '.$numero.' En Firma. en el que estás como requiriente.';
             correo($msg, $asunto, $correo, $nombre);
             $noti = $this->model->notifica($asunto, $msg, $cont['requiriente']);
 

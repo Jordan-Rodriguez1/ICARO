@@ -268,6 +268,24 @@ $(document).ready(function () {
     });
   });
 
+  //Mensaje de alerta al formalizar
+  $(".firma").submit(function (e) {
+    e.preventDefault();
+    Swal.fire({
+      title: "¿Está seguro de Poner EN FIRMA el Instrumento?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#28a745",
+      cancelButtonColor: "#dc3545",
+      confirmButtonText: "Si",
+      cancelButtonText: "No",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.submit();
+      }
+    });
+  });
+
   //Mensaje de alerta al no formalizar
   $(".noforma").submit(function (e) {
     e.preventDefault();

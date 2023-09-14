@@ -130,14 +130,19 @@ function decimales($dato) {
 }
 
 //FORMATO DEFHA POR DEFAULT
-function defaultdate($dato) {
-    if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $dato)) {
-        return $dato;
+function defaultdate($fecha) {
+    $fecha_array = explode('/', $fecha);  
+    if (count($fecha_array) == 3) {
+        $dia = $fecha_array[0];
+        $mes = $fecha_array[1];
+        $anio = $fecha_array[2];
+        
+        if (checkdate($mes, $dia, $anio)) {
+            return date('Y-m-d', strtotime("$anio-$mes-$dia"));
+        }
     } else {
-        $dato = '1000-10-10';
-        return $dato;
-    }
-    
+        return '1000-10-10'; // Fecha por defecto
+    } 
 }
 
 //FORMATO DEFHA POR INT
