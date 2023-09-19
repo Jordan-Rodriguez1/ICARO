@@ -19,7 +19,7 @@
                             </div>                                                                                        
                                     <div class="form-group">
                                         <label for="clave">Clave</label>
-                                        <input id="clave" max="999999999999999" class="form-control" type="number" name="clave" placeholder="Matrícula" value="<?php echo $data1['clave']; ?>" required>
+                                        <input id="clave" class="form-control" type="text" name="clave" placeholder="Matrícula" value="<?php echo $data1['clave']; ?>" required>
                                     </div>                                                                
                                     <div class="form-group">
                                         <label for="abreviacion">Abreviacion</label>

@@ -22,7 +22,7 @@ class UnidadesModel extends Mysql
         }
         return $res;
     }
-    public function actualizarUnidades(string $nombre, int $clave, string $abreviacion, int $id)
+    public function actualizarUnidades(string $nombre, string $clave, string $abreviacion, int $id)
     {
         $return = "";
         $this->nombre = $nombre;

@@ -269,7 +269,7 @@
                     JOIN usuarios u1 ON validar_cont.id_creador = u1.id
                     JOIN contratos c1 ON validar_cont.id_contrato = c1.numero
                     JOIN usuarios u2 ON validar_cont.id_validador = u2.id
-                    LEFT JOIN validar_contd vc ON validar_cont.id = vc.id_contrato;";
+                    LEFT JOIN validar_contd vc ON validar_cont.id_contrato = vc.id_contrato;";
             $res = $this->select_all($sql);
             return $res;
         }
